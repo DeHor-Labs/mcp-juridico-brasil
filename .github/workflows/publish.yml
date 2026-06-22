@@ -6,11 +6,11 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  build-and-publish:
+  build:
     runs-on: ubuntu-latest
-    environment: pypi
 
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +32,26 @@ jobs:
       - name: Constroi o pacote
         run: python -m build
 
-      - name: Publica no PyPI
-        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # release/v1
+      - name: Verifica metadados do pacote
+        run: pip install twine && twine check dist/*
+
+      - uses: actions/upload-artifact@v4
         with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/mcp-juridico-brasil
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publica no PyPI via Trusted Publishing (OIDC)
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # release/v1

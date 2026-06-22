@@ -52,7 +52,7 @@ class ProcessoProvider(ABC):
             JuridicoValidationError: Se desde_iso nao for uma data ISO 8601 valida.
         """
         try:
-            desde = datetime.fromisoformat(desde_iso)
+            desde = datetime.fromisoformat(desde_iso.replace("Z", "+00:00"))
         except ValueError as exc:
             raise JuridicoValidationError(
                 "desde_iso",

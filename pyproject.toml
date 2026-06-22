@@ -50,6 +50,7 @@ dependencies = [
     "aiolimiter>=1.2.1",
     "structlog>=25.5.0",
     "typer>=0.25.1",
+    "workalendar>=17.0.0",
 ]
 
 [project.optional-dependencies]
@@ -98,6 +99,11 @@ module = ["mcp_juridico_brasil.server"]
 disallow_untyped_decorators = false
 warn_unused_ignores = false
 
+[[tool.mypy.overrides]]
+module = ["workalendar.*", "dateutil.*", "lunardate.*", "pyluach.*", "pymeeus.*"]
+ignore_missing_imports = true
+ignore_errors = false
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
@@ -108,4 +114,5 @@ dev = [
     "respx>=0.22.0",
     "pytest-asyncio>=0.23",
     "pytest-cov>=7.1.0",
+    "types-python-dateutil>=2.9.0.20260518",
 ]

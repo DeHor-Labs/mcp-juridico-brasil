@@ -287,7 +287,7 @@ async def test_monitorar_processo_sem_atualizacao() -> None:
 
 @pytest.mark.asyncio
 async def test_calcular_prazo_retorna_estimativa_e_aviso() -> None:
-    """Tool deve retornar estimativa de prazo com campo 'aviso' proeminente."""
+    """Tool deve retornar estimativa de prazo com campos da Fase 2 e aviso proeminente."""
     from mcp_juridico_brasil.prazo.tools import calcular_proximo_prazo
 
     with patch(
@@ -297,15 +297,19 @@ async def test_calcular_prazo_retorna_estimativa_e_aviso() -> None:
     ):
         resultado = await calcular_proximo_prazo(NUMERO_VALIDO, TRIBUNAL, "Contestacao")
 
-    assert "prazo_estimado_iso" in resultado
+    # Campos da nova implementacao Fase 2
+    assert "data_final_iso" in resultado
+    assert "termo_inicial_iso" in resultado
     assert "aviso" in resultado
     assert "limitacao" in resultado
-    assert resultado["dias_prazo_estimado"] == 15  # Contestacao = 15 dias
+    assert resultado["dias_uteis_prazo"] == 15  # Contestacao = 15 dias uteis
+    assert "base_legal" in resultado
+    assert "feriados_e_recessos_no_periodo" in resultado
 
 
 @pytest.mark.asyncio
 async def test_calcular_prazo_tipo_ato_personalizado() -> None:
-    """Embargos de Declaracao deve usar 5 dias."""
+    """Embargos de Declaracao deve usar 5 dias uteis (art. 1.023 CPC)."""
     from mcp_juridico_brasil.prazo.tools import calcular_proximo_prazo
 
     with patch(
@@ -315,7 +319,7 @@ async def test_calcular_prazo_tipo_ato_personalizado() -> None:
     ):
         resultado = await calcular_proximo_prazo(NUMERO_VALIDO, TRIBUNAL, "Embargos de Declaracao")
 
-    assert resultado["dias_prazo_estimado"] == 5
+    assert resultado["dias_uteis_prazo"] == 5
 
 
 @pytest.mark.asyncio

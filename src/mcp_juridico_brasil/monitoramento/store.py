@@ -150,9 +150,7 @@ def remover_snapshot(numero_processo: str) -> bool:
         try:
             caminho.unlink()
         except OSError as exc:
-            logger.warning(
-                "snapshot_disco_falha_remocao", numero=numero_processo, erro=str(exc)
-            )
+            logger.warning("snapshot_disco_falha_remocao", numero=numero_processo, erro=str(exc))
     return existia
 
 

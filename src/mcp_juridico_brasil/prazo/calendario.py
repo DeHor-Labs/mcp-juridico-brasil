@@ -35,7 +35,6 @@ from __future__ import annotations
 import datetime
 import threading
 from dataclasses import dataclass, field
-from typing import cast
 
 from dateutil.easter import easter
 
@@ -116,7 +115,7 @@ class _CalendarioCache:
 
     def _sexta_santa(self, ano: int) -> datetime.date:
         """Calcula a Sexta-feira Santa (2 dias antes da Pascoa)."""
-        pascoa = cast(datetime.date, easter(ano))
+        pascoa: datetime.date = easter(ano)
         return pascoa - datetime.timedelta(days=2)
 
     def _feriados_nacionais_base(self, ano: int) -> set[datetime.date]:
@@ -311,7 +310,7 @@ def _nome_feriado(data: datetime.date, uf: str | None) -> str:
     """
     ano = data.year
     # Sexta-feira Santa (patch manual - nao tem nome no workalendar Brasil)
-    sexta = cast(datetime.date, easter(ano)) - datetime.timedelta(days=2)
+    sexta = easter(ano) - datetime.timedelta(days=2)
     if data == sexta:
         return "Sexta-feira Santa"
     # Dia da Consciencia Negra (patch manual - Lei 14.759/2023)

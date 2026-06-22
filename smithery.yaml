@@ -1,0 +1,26 @@
+# Smithery configuration - https://smithery.ai/docs/config#smitheryyaml
+# Deploy via Docker container com transporte HTTP streamable.
+#
+# MCP Juridico Brasil: acompanhamento de processos judiciais brasileiros.
+# Consulta DataJud CNJ (91 tribunais), movimentacoes, resumo de andamento,
+# monitoramento e alertas de prazo. Zero scraping - somente APIs oficiais no MVP.
+
+build:
+  dockerfile: Dockerfile
+  dockerBuildPath: .
+
+startCommand:
+  type: http
+  configSchema:
+    type: object
+    required: []
+    properties:
+      datajudApiKey:
+        type: string
+        description: "Chave de acesso a API publica DataJud (CNJ). Se omitida, usa a chave publica padrao publicada na wiki do CNJ."
+      providerComercial:
+        type: string
+        description: "Identificador do provider comercial opcional (judit, escavador, trackjud). Habilita funcionalidades de Fase 3 e 4."
+      providerApiKey:
+        type: string
+        description: "Chave de API do provider comercial configurado em providerComercial."

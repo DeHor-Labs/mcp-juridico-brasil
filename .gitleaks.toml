@@ -1,0 +1,9 @@
+# Configuracao gitleaks para mcp-juridico-brasil
+# https://github.com/gitleaks/gitleaks
+
+[allowlist]
+description = "Allowlist de falsos positivos documentados"
+# A chave DataJud e uma chave PUBLICA oficial do CNJ, documentada em:
+# https://datajud-wiki.cnj.jus.br/api-publica/acesso/
+# Nao e credencial privada - qualquer desenvolvedor pode usa-la sem cadastro.
+regexes = ['''cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw==''']

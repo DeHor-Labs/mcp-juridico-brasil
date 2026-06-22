@@ -1,0 +1,41 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.DeHor-Labs/mcp-juridico-brasil",
+  "title": "MCP Juridico Brasil",
+  "description": "Acompanhamento de processos judiciais brasileiros via DataJud CNJ. Consulta, movimentacoes, resumo e alertas de prazo. Cobertura de 91 tribunais.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/DeHor-Labs/mcp-juridico-brasil",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "mcp-juridico-brasil",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "tags": [
+        "juridico",
+        "judicial",
+        "brasil",
+        "brazil",
+        "datajud",
+        "cnj",
+        "processo",
+        "advocacia",
+        "legaltech",
+        "prazo",
+        "intimacao",
+        "monitoramento"
+      ]
+    }
+  }
+}

@@ -1,0 +1,111 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcp-juridico-brasil"
+version = "0.1.0"
+description = "MCP de acompanhamento de processos judiciais brasileiros - DataJud CNJ, monitoramento, resumo e alertas de prazo."
+authors = [
+    { name = "Nikolas de Hor", email = "nikolasdehor79@gmail.com" }
+]
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "juridico",
+    "judicial",
+    "brasil",
+    "brazil",
+    "datajud",
+    "cnj",
+    "processo",
+    "advocacia",
+    "legaltech",
+    "prazo",
+    "intimacao",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Office/Business :: Office Suites",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastmcp>=3.2.0",
+    "httpx>=0.27.0",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.13.1",
+    "python-dateutil>=2.9.0",
+    "tenacity>=9.1.4",
+    "cachetools>=7.0.5",
+    "aiolimiter>=1.2.1",
+    "structlog>=25.5.0",
+    "typer>=0.25.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.3",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.4.0",
+    "mypy>=1.10",
+    "pre-commit>=3.7",
+    "respx>=0.22.0",
+]
+
+[project.scripts]
+mcp-juridico-brasil = "mcp_juridico_brasil.server:main"
+mcp-juridico = "mcp_juridico_brasil.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/DeHor-Labs/mcp-juridico-brasil"
+Repository = "https://github.com/DeHor-Labs/mcp-juridico-brasil"
+Issues = "https://github.com/DeHor-Labs/mcp-juridico-brasil/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_juridico_brasil"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["mcp_juridico_brasil"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["mcp_juridico_brasil.server"]
+disallow_untyped_decorators = false
+warn_unused_ignores = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "respx>=0.22.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=7.1.0",
+]

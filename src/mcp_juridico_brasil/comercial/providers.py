@@ -118,6 +118,10 @@ class JuditProvider(ProcessoProvider):
     def __init__(self, api_key: str | None = None) -> None:
         self._api_key = api_key or _exigir_api_key("Judit")
         self._base_url = _JUDIT_BASE_URL
+        # TODO: substituir por client compartilhado por instancia (httpx.AsyncClient
+        # no __init__ + aclose() no ciclo de vida) para habilitar connection pooling
+        # e reduzir overhead de handshake TLS por chamada. Impacto aceitavel no
+        # volume atual, mas necessario antes de escalar para producao com alto RPS.
 
     def _headers(self) -> dict[str, str]:
         return {
@@ -263,10 +267,15 @@ class JuditProvider(ProcessoProvider):
         data_raw = data.get("data_hora", data.get("dataHora", data.get("data", "")))
         dt = _iso_ou_none(str(data_raw))
         if dt is None:
-            logger.warning(
-                "movimentacao_sem_data_usando_now",
+            # ATENCAO: data_hora ausente ou malformada. Usamos datetime.now como
+            # placeholder para satisfazer o schema nao-nullable, mas esse valor e
+            # INCORRETO para calculo de prazos. Logar como erro para visibilidade.
+            # TODO: quando Movimentacao.data_hora aceitar Optional[datetime], retornar None.
+            logger.error(
+                "movimentacao_data_invalida_usando_now",
                 provider="judit",
                 codigo=data.get("codigo"),
+                data_raw=str(data_raw)[:80],
             )
             dt = datetime.now(tz=timezone.utc)
         return Movimentacao(
@@ -453,10 +462,15 @@ class EscavadorProvider(ProcessoProvider):
         data_raw = data.get("data", data.get("data_hora", ""))
         dt = _iso_ou_none(str(data_raw))
         if dt is None:
-            logger.warning(
-                "movimentacao_sem_data_usando_now",
+            # ATENCAO: data_hora ausente ou malformada. Usamos datetime.now como
+            # placeholder para satisfazer o schema nao-nullable, mas esse valor e
+            # INCORRETO para calculo de prazos. Logar como erro para visibilidade.
+            # TODO: quando Movimentacao.data_hora aceitar Optional[datetime], retornar None.
+            logger.error(
+                "movimentacao_data_invalida_usando_now",
                 provider="escavador",
                 codigo=data.get("codigo_tpu"),
+                data_raw=str(data_raw)[:80],
             )
             dt = datetime.now(tz=timezone.utc)
         return Movimentacao(
@@ -635,10 +649,15 @@ class TrackJudProvider(ProcessoProvider):
         data_raw = data.get("data_hora", data.get("data", ""))
         dt = _iso_ou_none(str(data_raw))
         if dt is None:
-            logger.warning(
-                "movimentacao_sem_data_usando_now",
+            # ATENCAO: data_hora ausente ou malformada. Usamos datetime.now como
+            # placeholder para satisfazer o schema nao-nullable, mas esse valor e
+            # INCORRETO para calculo de prazos. Logar como erro para visibilidade.
+            # TODO: quando Movimentacao.data_hora aceitar Optional[datetime], retornar None.
+            logger.error(
+                "movimentacao_data_invalida_usando_now",
                 provider="trackjud",
                 codigo=data.get("codigo"),
+                data_raw=str(data_raw)[:80],
             )
             dt = datetime.now(tz=timezone.utc)
         return Movimentacao(

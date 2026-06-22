@@ -1,7 +1,7 @@
-"""Interface abstrata ProcessoProvider e implementacao DataJudProvider.
+"""Interface abstrata ProcessoProvider e implementação DataJudProvider.
 
 O design de provider abstrato permite trocar a fonte de dados sem alterar
-as tools MCP. Em producao, um provider comercial (Judit, Escavador) pode
+as tools MCP. Em produção, um provider comercial (Judit, Escavador) pode
 substituir o DataJud para tribunais com maior defasagem ou para consultas
 por CPF/CNPJ.
 
@@ -31,19 +31,19 @@ class ProcessoProvider(ABC):
     async def listar_movimentacoes(
         self, numero_processo: str, tribunal: str, limite: int = 20
     ) -> list[Movimentacao]:
-        """Retorna as movimentacoes mais recentes."""
+        """Retorna as movimentações mais recentes."""
         ...
 
     @abstractmethod
     async def verificar_atualizacao(
         self, numero_processo: str, tribunal: str, desde_iso: str
     ) -> bool:
-        """Retorna True se o processo teve atualizacao apos a data informada."""
+        """Retorna True se o processo teve atualização após a data informada."""
         ...
 
 
 class DataJudProvider(ProcessoProvider):
-    """Provider concreto baseado na API publica DataJud (CNJ).
+    """Provider concreto baseado na API pública DataJud (CNJ).
 
     Cobertura: 91 tribunais. Zero custo. Sem webhook (polling).
     Defasagem: T+1 a T+7 dias dependendo do tribunal.

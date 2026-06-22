@@ -1,10 +1,10 @@
 """Cliente DataJud CNJ.
 
-Consome a API publica Elasticsearch do DataJud (Portaria CNJ 160/2020).
-Chave de acesso publica - sem cadastro. Rotacionar se o CNJ revogar.
+Consome a API pública Elasticsearch do DataJud (Portaria CNJ 160/2020).
+Chave de acesso pública - sem cadastro. Rotacionar se o CNJ revogar.
 
-NOTA DE SEGURANCA: Esta implementacao verifica nivel_sigilo antes de retornar
-qualquer dado. Processos sigilosos lancam JuridicoSigiloError e NAO sao
+NOTA DE SEGURANÇA: Esta implementação verifica nivel_sigilo antes de retornar
+qualquer dado. Processos sigilosos lançam JuridicoSigiloError e NÃO são
 armazenados em cache nem em logs detalhados.
 """
 
@@ -31,15 +31,15 @@ logger = get_logger(__name__)
 
 
 class DataJudClient:
-    """Acesso a API publica DataJud com verificacao de sigilo integrada."""
+    """Acesso à API pública DataJud com verificação de sigilo integrada."""
 
     def _http(self, tribunal: str) -> HTTPClient:
         url = indice_para_url(tribunal, _settings.datajud_base_url)
         if not url:
             raise JuridicoAPIError(
                 source="DataJud",
-                reason=f"Tribunal '{tribunal}' nao suportado. "
-                f"Consulte listar_tribunais() para opcoes validas.",
+                reason=f"Tribunal '{tribunal}' não suportado. "
+                f"Consulte listar_tribunais() para opções válidas.",
             )
         return HTTPClient(
             base_url=url,
@@ -51,12 +51,12 @@ class DataJudClient:
         )
 
     async def buscar_por_numero(self, numero_processo: str, tribunal: str) -> Processo:
-        """Busca um processo pelo numero CNJ em um tribunal especifico.
+        """Busca um processo pelo número CNJ em um tribunal específico.
 
         Raises:
             JuridicoSigiloError: Se nivel_sigilo > 0.
-            JuridicoNotFoundError: Se o processo nao existir no indice.
-            JuridicoAPIError: Em falhas de comunicacao.
+            JuridicoNotFoundError: Se o processo não existir no índice.
+            JuridicoAPIError: Em falhas de comunicação.
         """
         query = {"query": {"match": {"numeroProcesso": numero_processo}}, "size": 1}
         async with self._http(tribunal) as client:
@@ -73,10 +73,10 @@ class DataJudClient:
         numero_processo: str,
         tribunais: list[str] | None = None,
     ) -> Processo:
-        """Tenta localizar o processo em multiplos tribunais.
+        """Tenta localizar o processo em múltiplos tribunais.
 
-        Util quando o tribunal nao e conhecido de antemao.
-        Itera pelos tribunais informados (ou por todos os suportados) ate
+        Útil quando o tribunal não é conhecido de antemão.
+        Itera pelos tribunais informados (ou por todos os suportados) até
         encontrar o processo.
         """
         targets = tribunais or listar_tribunais()

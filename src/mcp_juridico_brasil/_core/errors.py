@@ -6,7 +6,7 @@ from typing import Any
 
 
 class JuridicoError(Exception):
-    """Erro base do MCP Juridico Brasil."""
+    """Erro base do MCP Jurídico Brasil."""
 
     def __init__(self, message: str, detail: dict[str, Any] | None = None) -> None:
         super().__init__(message)
@@ -15,28 +15,28 @@ class JuridicoError(Exception):
 
 
 class JuridicoValidationError(JuridicoError):
-    """Dados de entrada invalidos (numero CNJ malformado, tribunal desconhecido, etc.)."""
+    """Dados de entrada inválidos (número CNJ malformado, tribunal desconhecido, etc.)."""
 
     def __init__(self, field: str, value: str, reason: str) -> None:
         super().__init__(
-            f"Valor invalido para '{field}': {value!r}. {reason}",
+            f"Valor inválido para '{field}': {value!r}. {reason}",
             detail={"field": field, "value": value, "reason": reason},
         )
 
 
 class JuridicoNotFoundError(JuridicoError):
-    """Processo ou recurso nao encontrado na fonte de dados."""
+    """Processo ou recurso não encontrado na fonte de dados."""
 
     def __init__(self, numero_processo: str, tribunal: str | None = None) -> None:
         where = f" no tribunal {tribunal}" if tribunal else ""
         super().__init__(
-            f"Processo {numero_processo} nao encontrado{where}.",
+            f"Processo {numero_processo} não encontrado{where}.",
             detail={"numero_processo": numero_processo, "tribunal": tribunal},
         )
 
 
 class JuridicoAPIError(JuridicoError):
-    """Falha na comunicacao com API externa (DataJud, provider comercial, DJe)."""
+    """Falha na comunicação com API externa (DataJud, provider comercial, DJe)."""
 
     def __init__(self, source: str, status_code: int | None = None, reason: str = "") -> None:
         msg = f"Falha ao acessar {source}"
@@ -48,18 +48,18 @@ class JuridicoAPIError(JuridicoError):
 
 
 class JuridicoSigiloError(JuridicoError):
-    """Processo em segredo de justica - acesso bloqueado por politica de privacidade.
+    """Processo em segredo de justiça - acesso bloqueado por política de privacidade.
 
-    Este erro DEVE ser propagado ao usuario com mensagem clara. Nao tente contornar
+    Este erro DEVE ser propagado ao usuário com mensagem clara. Não tente contornar
     o sigilo consultando outras fontes ou usando providers comerciais.
-    Fundamento legal: art. 189 do CPC e Resolucao CNJ 647/2025.
+    Fundamento legal: art. 189 do CPC e Resolução CNJ 647/2025.
     """
 
     def __init__(self, numero_processo: str, nivel_sigilo: int) -> None:
         super().__init__(
-            f"O processo {numero_processo} esta em segredo de justica "
-            f"(nivel {nivel_sigilo}) e nao pode ser acessado por esta ferramenta. "
-            "Acesso restrito as partes e seus advogados via portal do tribunal.",
+            f"O processo {numero_processo} está em segredo de justiça "
+            f"(nível {nivel_sigilo}) e não pode ser acessado por esta ferramenta. "
+            "Acesso restrito às partes e seus advogados via portal do tribunal.",
             detail={"numero_processo": numero_processo, "nivel_sigilo": nivel_sigilo},
         )
 

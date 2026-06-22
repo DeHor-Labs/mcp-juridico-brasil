@@ -25,7 +25,7 @@ def _is_retryable(exc: BaseException) -> bool:
 
 
 class HTTPClient:
-    """Cliente JSON async para servicos externos do MCP Juridico Brasil."""
+    """Cliente JSON async para serviços externos do MCP Jurídico Brasil."""
 
     def __init__(
         self,
@@ -58,7 +58,7 @@ class HTTPClient:
             self._client = None
 
     async def get(self, path: str, params: dict[str, Any] | None = None) -> Any:
-        """GET com cache TTL e retry automatico."""
+        """GET com cache TTL e retry automático."""
         cache_key = f"GET:{path}:{params}"
         if cache_key in self._cache:
             return self._cache[cache_key]
@@ -73,7 +73,7 @@ class HTTPClient:
 
     async def _request(self, method: str, path: str, **kwargs: Any) -> Any:
         if self._client is None:
-            raise RuntimeError("HTTPClient nao inicializado. Use como context manager.")
+            raise RuntimeError("HTTPClient não inicializado. Use como context manager.")
 
         async with self._limiter:
             async for attempt in AsyncRetrying(

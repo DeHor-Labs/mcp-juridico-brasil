@@ -1,12 +1,12 @@
 """Tool MCP: resumir_andamento.
 
 Gera um resumo em linguagem natural do andamento processual com base
-nas movimentacoes do DataJud. O resumo e produzido pelo proprio LLM
-que invoca esta tool - o MCP retorna os dados estruturados e a instrucao
-de resumo; nao chama um LLM externo (sem dependencia de OpenAI/Anthropic).
+nas movimentações do DataJud. O resumo é produzido pelo próprio LLM
+que invoca esta tool - o MCP retorna os dados estruturados e a instrução
+de resumo; não chama um LLM externo (sem dependência de OpenAI/Anthropic).
 
-DISCLAIMER: O resumo e gerado a partir de metadados publicos do DataJud.
-Nao substitui a leitura integral dos autos pelo advogado responsavel.
+DISCLAIMER: O resumo é gerado a partir de metadados públicos do DataJud.
+Não substitui a leitura integral dos autos pelo advogado responsável.
 """
 
 from __future__ import annotations
@@ -20,15 +20,15 @@ _provider = DataJudProvider()
 
 _INSTRUCAO_RESUMO = """
 Com base nos dados estruturados do processo acima, produza um resumo objetivo
-em linguagem juridica acessivel contendo:
-1. Identificacao do processo (tribunal, classe, assunto principal, orgao julgador).
-2. Status atual (ultima movimentacao e seu significado pratico).
-3. Historico resumido das ultimas movimentacoes em ordem cronologica.
-4. Pontos de atencao que o advogado deve verificar no portal do tribunal.
+em linguagem jurídica acessível contendo:
+1. Identificação do processo (tribunal, classe, assunto principal, órgão julgador).
+2. Status atual (última movimentação e seu significado prático).
+3. Histórico resumido das últimas movimentações em ordem cronológica.
+4. Pontos de atenção que o advogado deve verificar no portal do tribunal.
 
-Mantenha tom tecnico-juridico. Nao emita opiniao sobre o merito da causa.
-Nao faca previsoes de resultado. Se algum dado estiver ausente, indique
-'nao disponivel via DataJud' e oriente o advogado a consultar o portal do tribunal.
+Mantenha tom técnico-jurídico. Não emita opinião sobre o mérito da causa.
+Não faça previsões de resultado. Se algum dado estiver ausente, indique
+'não disponível via DataJud' e oriente o advogado a consultar o portal do tribunal.
 """
 
 
@@ -36,24 +36,24 @@ async def resumir_andamento(
     numero_processo: str,
     tribunal: str | None = None,
 ) -> dict[str, object]:
-    """Retorna dados estruturados de um processo para geracao de resumo pelo LLM.
+    """Retorna dados estruturados de um processo para geração de resumo pelo LLM.
 
     Esta tool busca o processo no DataJud e devolve os dados formatados
-    junto com instrucoes para que o modelo gere o resumo em linguagem natural.
-    O processamento semantico (resumo) fica no modelo, nao no MCP.
+    junto com instruções para que o modelo gere o resumo em linguagem natural.
+    O processamento semântico (resumo) fica no modelo, não no MCP.
 
     Args:
-        numero_processo: Numero no formato CNJ.
+        numero_processo: Número no formato CNJ.
         tribunal: Sigla do tribunal. Se omitida, o sistema pesquisa em todos.
 
     Returns:
-        Dados do processo + instrucao de resumo para o modelo.
+        Dados do processo + instrução de resumo para o modelo.
     """
     if not validar_numero_cnj(numero_processo):
         raise JuridicoValidationError(
             field="numero_processo",
             value=numero_processo,
-            reason="Formato invalido. Use o padrao CNJ: NNNNNNN-DD.AAAA.J.TT.OOOO.",
+            reason="Formato inválido. Use o padrão CNJ: NNNNNNN-DD.AAAA.J.TT.OOOO.",
         )
 
     numero_normalizado = normalizar_numero_cnj(numero_processo)
@@ -65,12 +65,12 @@ async def resumir_andamento(
         "dados_processo": processo.model_dump(mode="json"),
         "instrucao_resumo": _INSTRUCAO_RESUMO.strip(),
         "aviso": (
-            "AVISO LEGAL: Este resumo e gerado a partir de metadados publicos "
-            "do DataJud CNJ com possivel defasagem. Nao constitui consultoria juridica "
-            "nem substitui a leitura integral dos autos pelo advogado responsavel. "
-            "Fundamento: OAB Recomendacao 001/2024."
+            "AVISO LEGAL: Este resumo é gerado a partir de metadados públicos "
+            "do DataJud CNJ com possível defasagem. Não constitui consultoria jurídica "
+            "nem substitui a leitura integral dos autos pelo advogado responsável. "
+            "Fundamento: OAB Recomendação 001/2024."
         ),
-        "fonte": "DataJud CNJ (API Publica)",
+        "fonte": "DataJud CNJ (API Pública)",
     }
 
 

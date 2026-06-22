@@ -1,0 +1,65 @@
+name: Bug Report
+description: Reporte um bug no mcp-juridico-brasil
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição
+      description: Descrição clara do que está ocorrendo.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Passos para reproduzir o comportamento.
+      placeholder: |
+        1. Configure a tool com...
+        2. Chame a tool '...'
+        3. Veja o erro
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamento esperado
+      description: O que você esperava que acontecesse.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Módulo afetado
+      options:
+        - processual
+        - monitoramento
+        - prazo
+        - jurisprudencia
+        - legislacao
+        - calculos
+        - core/server
+        - outro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: python-version
+    attributes:
+      label: Versão do Python
+      options:
+        - "3.10"
+        - "3.11"
+        - "3.12"
+        - "3.13"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Saída de erro / Logs
+      render: text

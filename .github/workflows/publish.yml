@@ -1,0 +1,38 @@
+name: Publicar no PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configura Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-publish-${{ hashFiles('pyproject.toml') }}
+
+      - name: Instala ferramentas de build
+        run: pip install hatchling build
+
+      - name: Constroi o pacote
+        run: python -m build
+
+      - name: Publica no PyPI
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}

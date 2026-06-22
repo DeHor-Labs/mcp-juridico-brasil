@@ -1,0 +1,36 @@
+name: Welcome
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    if: ${{ !endsWith(github.actor, '[bot]') }}
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/first-interaction@1c4688942c71f71d4f5502a26ea67c331730fa4d # v3
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: |
+            Obrigado por abrir uma issue! Vamos analisar assim que possivel.
+
+            Para nos ajudar a entender o problema, inclua:
+            - Descricao clara do que aconteceu e o que era esperado
+            - Para bugs: tribunal (ex.: TJSP, STJ, TRF3), numero do processo, versao do pacote (`pip show mcp-juridico-brasil`) e passos para reproduzir
+            - Versao do Python e sistema operacional
+
+            Tem uma duvida ou sugestao mais aberta? Use o [Discussions](../../discussions) do projeto.
+          pr_message: |
+            Obrigado pela contribuicao! Agradecemos o tempo dedicado.
+
+            Antes de seguir, confira:
+            - Os testes e o lint passam localmente (`pytest` e `ruff check`)
+            - A mudanca esta descrita na descricao do PR (o que foi alterado e por que)
+            - Tribunais e modulos juridicos afetados estao mencionados, se aplicavel
+            - Nenhuma credencial ou dado de processo real foi incluido acidentalmente

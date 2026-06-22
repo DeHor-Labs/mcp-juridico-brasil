@@ -72,6 +72,8 @@ mcp-juridico = "mcp_juridico_brasil.cli:main"
 Homepage = "https://github.com/DeHor-Labs/mcp-juridico-brasil"
 Repository = "https://github.com/DeHor-Labs/mcp-juridico-brasil"
 Issues = "https://github.com/DeHor-Labs/mcp-juridico-brasil/issues"
+Changelog = "https://github.com/DeHor-Labs/mcp-juridico-brasil/blob/main/CHANGELOG.md"
+Examples = "https://github.com/DeHor-Labs/mcp-juridico-brasil/tree/main/examples"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mcp_juridico_brasil"]

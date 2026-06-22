@@ -182,9 +182,7 @@ class _CalendarioCache:
         cal_uf = cal_class()
         nacionais = self._feriados_nacionais_base(ano)
         return {
-            d: f"{n} (feriado estadual {uf})"
-            for d, n in cal_uf.holidays(ano)
-            if d not in nacionais
+            d: f"{n} (feriado estadual {uf})" for d, n in cal_uf.holidays(ano) if d not in nacionais
         }
 
     def get_feriados(self, uf: str | None, ano: int) -> set[datetime.date]:

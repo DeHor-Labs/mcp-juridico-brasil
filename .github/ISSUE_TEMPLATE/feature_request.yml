@@ -1,0 +1,43 @@
+name: Feature Request
+description: Sugira uma nova funcionalidade ou melhoria
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição
+      description: Descrição clara da funcionalidade que você gostaria de ver.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Módulo
+      description: A qual módulo essa funcionalidade pertenceria?
+      options:
+        - processual
+        - monitoramento
+        - prazo
+        - jurisprudencia
+        - legislacao
+        - calculos
+        - novo módulo
+        - core/server
+        - outro
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Caso de uso
+      description: Descreva o caso de uso - que problema isso resolve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: Alguma abordagem alternativa que você já pensou?

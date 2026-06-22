@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Circulo externo azul royal -->
+  <circle cx="60" cy="60" r="58" fill="#003087"/>
+  <!-- Circulo medio verde judicial -->
+  <circle cx="60" cy="60" r="46" fill="#1a7a4a"/>
+  <!-- Circulo interno azul escuro -->
+  <circle cx="60" cy="60" r="34" fill="#001f5b"/>
+
+  <!-- Balanca da justica: haste central -->
+  <rect x="58.5" y="38" width="3" height="34" rx="1.5" fill="white" opacity="0.95"/>
+
+  <!-- Topo da balanca (travessao horizontal) -->
+  <rect x="44" y="39" width="32" height="3" rx="1.5" fill="white" opacity="0.95"/>
+
+  <!-- Prato esquerdo: corrente -->
+  <line x1="48" y1="42" x2="48" y2="51" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+  <!-- Prato esquerdo: base -->
+  <path d="M42 51 Q48 54 54 51" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- Prato direito: corrente -->
+  <line x1="72" y1="42" x2="72" y2="55" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+  <!-- Prato direito: base (levemente mais baixo, dinamismo) -->
+  <path d="M66 55 Q72 58 78 55" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- Base da balanca -->
+  <rect x="55" y="72" width="10" height="2.5" rx="1.2" fill="white" opacity="0.8"/>
+  <rect x="51" y="74.5" width="18" height="2.5" rx="1.2" fill="white" opacity="0.7"/>
+
+  <!-- Nos de IA na base (conectividade) -->
+  <circle cx="49" cy="66" r="3" fill="#4fc3f7"/>
+  <circle cx="60" cy="66" r="3" fill="#4fc3f7"/>
+  <circle cx="71" cy="66" r="3" fill="#4fc3f7"/>
+  <line x1="52" y1="66" x2="57" y2="66" stroke="#4fc3f7" stroke-width="1.5"/>
+  <line x1="63" y1="66" x2="68" y2="66" stroke="#4fc3f7" stroke-width="1.5"/>
+
+  <!-- Estrelas decorativas -->
+  <circle cx="60" cy="48" r="1.2" fill="white" opacity="0.4"/>
+  <circle cx="52" cy="56" r="1" fill="white" opacity="0.3"/>
+  <circle cx="68" cy="54" r="1" fill="white" opacity="0.3"/>
+</svg>

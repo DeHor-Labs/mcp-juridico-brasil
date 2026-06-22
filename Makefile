@@ -1,4 +1,4 @@
-.PHONY: install dev lint test typecheck clean
+.PHONY: install dev lint test typecheck check build check-release-metadata clean
 
 install:
 	uv sync
@@ -16,6 +16,17 @@ lint-fix:
 
 typecheck:
 	uv run mypy src
+
+# Lint + typecheck (atalho pre-PR)
+check: lint typecheck
+
+# Empacota o wheel (uv build)
+build:
+	uv build
+
+# Valida consistencia de versao entre pyproject.toml, server.json e CHANGELOG.md
+check-release-metadata:
+	@uv run python scripts/check_release_metadata.py
 
 test:
 	uv run pytest tests/ -v

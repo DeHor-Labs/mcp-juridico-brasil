@@ -1040,8 +1040,7 @@ class TestSegurancaIsoOuNoneLogado:
 
         # Warning deve ter sido logado com o valor recebido
         warning_calls = [
-            c for c in mock_logger.warning.call_args_list
-            if c[0][0] == "dje_data_invalida_ignorada"
+            c for c in mock_logger.warning.call_args_list if c[0][0] == "dje_data_invalida_ignorada"
         ]
         assert len(warning_calls) >= 1
         assert warning_calls[0][1].get("valor") == "nao-e-uma-data"

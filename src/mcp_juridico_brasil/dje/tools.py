@@ -42,6 +42,7 @@ def _get_provider() -> DJeProvider:
         _provider = DJeProvider()
     return _provider
 
+
 _DISCLAIMER = (
     "AVISO: Informações do Domicílio Judicial Eletrônico fornecidas para uso "
     "exclusivo do advogado responsável. Não constitui consultoria jurídica. "

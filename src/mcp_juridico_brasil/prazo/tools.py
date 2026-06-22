@@ -1,18 +1,18 @@
 """Tool MCP: calcular_proximo_prazo.
 
-Fase 2: calculo de prazos processuais em dias uteis com calendario forense.
+Fase 2: cálculo de prazos processuais em dias úteis com calendário forense.
 
 Regras implementadas:
-- Art. 219 CPC: prazos contados em dias uteis
-- Art. 224 CPC: termo inicial no primeiro dia util apos a intimacao/publicacao
+- Art. 219 CPC: prazos contados em dias úteis
+- Art. 224 CPC: termo inicial no primeiro dia útil após a intimação/publicação
 - Art. 220 CPC: recesso forense (20/dez a 20/jan) suspende a contagem
 - Feriados nacionais via workalendar + Sexta-feira Santa
-- Feriados estaduais via workalendar subregions (parametro uf opcional)
+- Feriados estaduais via workalendar subregions (parâmetro uf opcional)
 
-IMPORTANTE: Este calculo e uma estimativa tecnica de apoio ao advogado.
-Nao substitui a verificacao no portal do tribunal nem a analise do profissional
-habilitado. Feriados municipais, pontos facultativos e suspensoes extraordinarias
-NAO sao automaticamente considerados.
+IMPORTANTE: Este cálculo é uma estimativa técnica de apoio ao advogado.
+Não substitui a verificação no portal do tribunal nem a análise do profissional
+habilitado. Feriados municipais, pontos facultativos e suspensões extraordinárias
+NÃO são automaticamente considerados.
 """
 
 from __future__ import annotations
@@ -56,32 +56,32 @@ async def calcular_proximo_prazo(
     uf: str | None = None,
     data_intimacao_iso: str | None = None,
 ) -> dict[str, object]:
-    """Calcula o proximo prazo processual em dias uteis com calendario forense.
+    """Calcula o próximo prazo processual em dias úteis com calendário forense.
 
-    Implementa art. 219 (dias uteis), art. 224 (termo inicial no dia seguinte)
-    e art. 220 CPC (suspensao no recesso forense 20/dez a 20/jan).
+    Implementa art. 219 (dias úteis), art. 224 (termo inicial no dia seguinte)
+    e art. 220 CPC (suspensão no recesso forense 20/dez a 20/jan).
 
     Args:
-        numero_processo: Numero no formato CNJ (NNNNNNN-DD.AAAA.J.TT.OOOO).
+        numero_processo: Número no formato CNJ (NNNNNNN-DD.AAAA.J.TT.OOOO).
         tribunal: Sigla do tribunal (ex: 'TJSP', 'TRF1').
         tipo_ato: Tipo do ato processual para selecionar prazo CPC
                   (ex: 'Contestacao', 'Embargos de Declaracao').
-                  Se omitido, usa prazo padrao de 15 dias uteis.
-        uf: Sigla da UF para incluir feriados estaduais no calculo
+                  Se omitido, usa prazo padrão de 15 dias úteis.
+        uf: Sigla da UF para incluir feriados estaduais no cálculo
             (ex: 'SP', 'RJ', 'MG'). Se omitida, usa apenas feriados nacionais.
-        data_intimacao_iso: Data de intimacao/publicacao em ISO 8601
+        data_intimacao_iso: Data de intimação/publicação em ISO 8601
                             (ex: '2025-01-15'). Se omitida, usa a data da
-                            ultima movimentacao disponivel no DataJud.
+                            última movimentação disponível no DataJud.
 
     Returns:
-        Dicionario com termo_inicial, data_final, dias_uteis, feriados
-        que afetaram o calculo e campo 'aviso' com limitacoes.
+        Dicionário com termo_inicial, data_final, dias_uteis, feriados
+        que afetaram o cálculo e campo 'aviso' com limitações.
     """
     if not validar_numero_cnj(numero_processo):
         raise JuridicoValidationError(
             field="numero_processo",
             value=numero_processo,
-            reason="Formato invalido. Use o padrao CNJ: NNNNNNN-DD.AAAA.J.TT.OOOO.",
+            reason="Formato inválido. Use o padrão CNJ: NNNNNNN-DD.AAAA.J.TT.OOOO.",
         )
 
     if uf is not None and uf.upper() not in UF_PARA_ISO:
@@ -89,7 +89,7 @@ async def calcular_proximo_prazo(
             field="uf",
             value=uf,
             reason=(
-                f"UF '{uf}' nao reconhecida. Use sigla de 2 letras (ex: 'SP', 'RJ', 'MG'). "
+                f"UF '{uf}' não reconhecida. Use sigla de 2 letras (ex: 'SP', 'RJ', 'MG'). "
                 f"UFs suportadas: {', '.join(sorted(UF_PARA_ISO.keys()))}"
             ),
         )
@@ -99,13 +99,13 @@ async def calcular_proximo_prazo(
     if data_intimacao_iso is not None:
         try:
             data_intimacao_input = datetime.date.fromisoformat(
-                data_intimacao_iso[:10]  # aceita datetime completo, usa so a data
+                data_intimacao_iso[:10]  # aceita datetime completo, usa só a data
             )
         except ValueError as exc:
             raise JuridicoValidationError(
                 field="data_intimacao_iso",
                 value=data_intimacao_iso,
-                reason="Data invalida. Use formato ISO 8601: YYYY-MM-DD ou YYYY-MM-DDTHH:MM:SS",
+                reason="Data inválida. Use formato ISO 8601: YYYY-MM-DD ou YYYY-MM-DDTHH:MM:SS",
             ) from exc
 
     numero_normalizado = normalizar_numero_cnj(numero_processo)
@@ -131,10 +131,10 @@ async def calcular_proximo_prazo(
                 "numero_processo": numero_normalizado,
                 "tribunal": tribunal,
                 "prazo_estimado": None,
-                "motivo": "Nenhuma movimentacao disponivel no DataJud para calcular prazo.",
+                "motivo": "Nenhuma movimentação disponível no DataJud para calcular prazo.",
                 "aviso": (
-                    "AVISO: Nao foi possivel calcular o prazo pois o processo nao "
-                    "possui movimentacoes registradas no DataJud. Verifique o portal "
+                    "AVISO: Não foi possível calcular o prazo pois o processo não "
+                    "possui movimentações registradas no DataJud. Verifique o portal "
                     "do tribunal ou forneça data_intimacao_iso manualmente."
                 ),
             }
@@ -185,8 +185,8 @@ async def calcular_proximo_prazo(
         "limitacao": (
             "Fase 2: feriados nacionais e estaduais cobertos. "
             "Feriados municipais, pontos facultativos (ex: Carnaval) e "
-            "suspensoes extraordinarias NAO sao considerados automaticamente. "
-            "Fase 3+ ampliara a cobertura com feeds de expediente por tribunal."
+            "suspensões extraordinárias NÃO são considerados automaticamente. "
+            "Fase 3+ ampliará a cobertura com feeds de expediente por tribunal."
         ),
     }
 

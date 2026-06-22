@@ -1,4 +1,4 @@
-"""Configuracao de logging estruturado com structlog."""
+"""Configuração de logging estruturado com structlog."""
 
 from __future__ import annotations
 
@@ -9,12 +9,12 @@ import structlog
 
 
 def get_logger(name: str) -> structlog.stdlib.BoundLogger:
-    """Retorna um logger estruturado para o modulo informado."""
+    """Retorna um logger estruturado para o módulo informado."""
     return cast(structlog.stdlib.BoundLogger, structlog.get_logger(name))
 
 
 def configure_logging(level: str = "INFO") -> None:
-    """Configura o pipeline do structlog para o ambiente de execucao."""
+    """Configura o pipeline do structlog para o ambiente de execução."""
     logging.basicConfig(
         format="%(message)s",
         level=getattr(logging, level.upper(), logging.INFO),

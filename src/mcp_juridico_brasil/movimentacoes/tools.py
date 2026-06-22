@@ -15,25 +15,25 @@ async def listar_movimentacoes(
     tribunal: str,
     limite: int = 20,
 ) -> dict[str, object]:
-    """Lista as movimentacoes mais recentes de um processo judicial.
+    """Lista as movimentações mais recentes de um processo judicial.
 
-    Retorna o historico de andamentos com codigo TPU, nome e data/hora,
+    Retorna o histórico de andamentos com código TPU, nome e data/hora,
     ordenado do mais recente para o mais antigo.
 
     Args:
-        numero_processo: Numero no formato CNJ.
-        tribunal: Sigla do tribunal (obrigatoria nesta tool para evitar
-                  varredura de todos os indices).
-        limite: Numero maximo de movimentacoes a retornar (padrao 20, max 50).
+        numero_processo: Número no formato CNJ.
+        tribunal: Sigla do tribunal (obrigatória nesta tool para evitar
+                  varredura de todos os índices).
+        limite: Número máximo de movimentações a retornar (padrão 20, max 50).
 
     Returns:
-        Lista de movimentacoes com metadados.
+        Lista de movimentações com metadados.
     """
     if not validar_numero_cnj(numero_processo):
         raise JuridicoValidationError(
             field="numero_processo",
             value=numero_processo,
-            reason="Formato invalido. Use o padrao CNJ: NNNNNNN-DD.AAAA.J.TT.OOOO.",
+            reason="Formato inválido. Use o padrão CNJ: NNNNNNN-DD.AAAA.J.TT.OOOO.",
         )
 
     limite = min(max(1, limite), 50)
@@ -48,7 +48,7 @@ async def listar_movimentacoes(
         "total_retornado": len(movs),
         "movimentacoes": [m.model_dump(mode="json") for m in movs],
         "nota": (
-            "Movimentacoes refletem o DataJud com possivel defasagem de T+1 a T+7 dias. "
+            "Movimentações refletem o DataJud com possível defasagem de T+1 a T+7 dias. "
             "Consulte o portal do tribunal para dados em tempo real."
         ),
     }

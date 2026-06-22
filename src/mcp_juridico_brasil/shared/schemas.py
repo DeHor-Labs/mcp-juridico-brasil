@@ -1,9 +1,9 @@
-"""Schemas Pydantic compartilhados entre os modulos do MCP Juridico Brasil.
+"""Schemas Pydantic compartilhados entre os módulos do MCP Jurídico Brasil.
 
-NOTA LGPD: Estes schemas nao persistem CPF/CNPJ de partes nem dados sensiveis
-(saude, orientacao sexual, origem etnica) mesmo quando presentes nos autos.
-Campos de identificacao de partes adversas sao retornados somente para o
-advogado autenticado cujo processo esta sendo monitorado.
+NOTA LGPD: Estes schemas não persistem CPF/CNPJ de partes nem dados sensíveis
+(saúde, orientação sexual, origem étnica) mesmo quando presentes nos autos.
+Campos de identificação de partes adversas são retornados somente para o
+advogado autenticado cujo processo está sendo monitorado.
 """
 
 from __future__ import annotations
@@ -23,12 +23,12 @@ class OrgaoJulgador(BaseModel):
 class Parte(BaseModel):
     """Parte processual.
 
-    LGPD: O campo 'nome' e retornado como presente na API publica DataJud.
-    CPF/CNPJ nao e indexado pela API publica por razoes de LGPD.
+    LGPD: O campo 'nome' é retornado como presente na API pública DataJud.
+    CPF/CNPJ não é indexado pela API pública por razões de LGPD.
     """
 
     nome: str
-    tipo: str  # ex.: "Advogado", "Autor", "Reu", "Interessado"
+    tipo: str  # ex.: "Advogado", "Autor", "Réu", "Interessado"
     polo: str | None = None  # "ativo", "passivo", "outros"
 
 
@@ -46,10 +46,10 @@ class Assunto(BaseModel):
 
 
 class Processo(BaseModel):
-    """Representacao de um processo judicial.
+    """Representação de um processo judicial.
 
-    nivel_sigilo == 0 indica processo publico.
-    nivel_sigilo > 0 NUNCA deve ser armazenado ou exibido sem autorizacao judicial.
+    nivel_sigilo == 0 indica processo público.
+    nivel_sigilo > 0 NUNCA deve ser armazenado ou exibido sem autorização judicial.
     """
 
     numero_processo: str
@@ -64,7 +64,7 @@ class Processo(BaseModel):
     orgao_julgador: OrgaoJulgador | None = None
     partes: list[Parte] = Field(default_factory=list)
     movimentacoes: list[Movimentacao] = Field(default_factory=list)
-    formato: str | None = None  # "Fisico" ou "Eletronico"
+    formato: str | None = None  # "Físico" ou "Eletrônico"
     sistema: str | None = None  # "PJe", "eSAJ", "eProc", etc.
 
     @property

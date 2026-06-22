@@ -1,10 +1,10 @@
-"""Configuracao de runtime do mcp-juridico-brasil."""
+"""Configuração de runtime do mcp-juridico-brasil."""
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Configuracoes carregadas de variaveis de ambiente ou arquivo .env."""
+    """Configurações carregadas de variáveis de ambiente ou arquivo .env."""
 
     # Ambiente
     juridico_env: str = "development"
@@ -17,10 +17,10 @@ class Settings(BaseSettings):
     juridico_max_retries: int = 3
 
     # DataJud CNJ (Fase 1)
-    # Chave publica divulgada pelo proprio CNJ na wiki oficial do DataJud.
-    # Nao e credencial privada - qualquer usuario pode obte-la sem cadastro.
-    # ATENCAO: as credenciais das Fases 3/4 (juridico_provider_api_key,
-    # dje_client_id, dje_client_secret) sao PRIVADAS e NAO devem ter default.
+    # Chave pública divulgada pelo próprio CNJ na wiki oficial do DataJud.
+    # Não é credencial privada - qualquer usuário pode obtê-la sem cadastro.
+    # ATENÇÃO: as credenciais das Fases 3/4 (juridico_provider_api_key,
+    # dje_client_id, dje_client_secret) são PRIVADAS e NÃO devem ter default.
     # Ao rotacionar, definir DATAJUD_API_KEY no ambiente e remover este default.
     datajud_api_key: str = "cDZHYzlZa0JadVREZDJCendQbXY6SkJlTzNjLV9TRENyQk1RdnFKZGRQdw=="
     datajud_base_url: str = "https://api-publica.datajud.cnj.jus.br"
@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     juridico_provider_comercial: str = ""
     juridico_provider_api_key: str = ""
 
-    # Domicilio Judicial Eletronico (Fase 4 - opcional)
+    # Domicílio Judicial Eletrônico (Fase 4 - opcional)
     dje_client_id: str = ""
     dje_client_secret: str = ""
     dje_behalf_of_cpf: str = ""

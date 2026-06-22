@@ -1,33 +1,33 @@
-"""Calendario forense brasileiro para calculo de prazos processuais.
+"""Calendário forense brasileiro para cálculo de prazos processuais.
 
 Implementa as regras do CPC/2015:
-- Art. 219: prazos contados em dias uteis
-- Art. 224: termo inicial no primeiro dia util seguinte ao da intimacao/publicacao
-- Art. 220: suspensao de prazos durante recesso forense (20/dez a 20/jan)
+- Art. 219: prazos contados em dias úteis
+- Art. 224: termo inicial no primeiro dia útil seguinte ao da intimação/publicação
+- Art. 220: suspensão de prazos durante recesso forense (20/dez a 20/jan)
 
 Cobertura de feriados:
-- Feriados nacionais via workalendar (Brazil): Confraternizacao, Tiradentes,
-  Trabalho, Independencia, Aparecida, Finados, Proclamacao, Natal
-- Dia da Consciencia Negra (20/nov): feriado nacional desde 2024 (Lei 14.759/2023);
-  patch manual necessario pois o workalendar v17 nao inclui essa data
-- Sexta-feira Santa (feriado nacional reconhecido pelo STJ/TST, nao incluido
-  no workalendar Brasil por ser movel; calculado com python-dateutil)
+- Feriados nacionais via workalendar (Brazil): Confraternização, Tiradentes,
+  Trabalho, Independência, Aparecida, Finados, Proclamação, Natal
+- Dia da Consciência Negra (20/nov): feriado nacional desde 2024 (Lei 14.759/2023);
+  patch manual necessário pois o workalendar v17 não inclui essa data
+- Sexta-feira Santa (feriado nacional reconhecido pelo STJ/TST, não incluído
+  no workalendar Brasil por ser móvel; calculado com python-dateutil)
 - Feriados estaduais via workalendar subregions (BR-SP, BR-RJ, etc.)
   para as UFs mapeadas - ver UF_PARA_ISO abaixo
 
-Limitacoes documentadas (campo 'aviso' na tool):
-- Feriados municipais (ex: aniversario da cidade) NAO sao cobertos
-- Ponto facultativo de Carnaval (2a/3a-feira) NAO eh feriado legal; tribunais
-  podem ou nao suspender expediente - o advogado deve verificar o expediente
+Limitações documentadas (campo 'aviso' na tool):
+- Feriados municipais (ex: aniversário da cidade) NÃO são cobertos
+- Ponto facultativo de Carnaval (2a/3a-feira) NÃO é feriado legal; tribunais
+  podem ou não suspender expediente - o advogado deve verificar o expediente
   do tribunal
-- Corpus Christi (60 dias apos a Pascoa) e ponto facultativo federal e
-  suspenso na maioria dos tribunais, mas NAO tem status de feriado legal
-  nacional - o advogado deve verificar o expediente do tribunal especifico
-- Feriados estaduais de UFs sem subregion mapeada no workalendar sao tratados
+- Corpus Christi (60 dias após a Páscoa) é ponto facultativo federal e
+  suspenso na maioria dos tribunais, mas NÃO tem status de feriado legal
+  nacional - o advogado deve verificar o expediente do tribunal específico
+- Feriados estaduais de UFs sem subregion mapeada no workalendar são tratados
   como apenas nacionais
-- Feriados criados por legislacao estadual posterior a base de dados do
-  workalendar podem nao estar incluidos
-- Esta implementacao NAO substitui a consulta ao portal do tribunal
+- Feriados criados por legislação estadual posterior à base de dados do
+  workalendar podem não estar incluídos
+- Esta implementação NÃO substitui a consulta ao portal do tribunal
 """
 
 from __future__ import annotations
@@ -81,32 +81,32 @@ _RECESSO_FIM_DIA = 20
 
 @dataclass
 class ResultadoCalculo:
-    """Resultado estruturado do calculo de prazo processual."""
+    """Resultado estruturado do cálculo de prazo processual."""
 
     data_intimacao: datetime.date
-    """Data de intimacao/publicacao fornecida."""
+    """Data de intimação/publicação fornecida."""
     termo_inicial: datetime.date
-    """Primeiro dia util apos a intimacao (art. 224 CPC)."""
+    """Primeiro dia útil após a intimação (art. 224 CPC)."""
     data_final: datetime.date
-    """Data final do prazo (ultimo dia util contado)."""
+    """Data final do prazo (último dia útil contado)."""
     dias_uteis: int
-    """Quantidade de dias uteis do prazo."""
+    """Quantidade de dias úteis do prazo."""
     feriados_no_periodo: list[tuple[datetime.date, str]] = field(default_factory=list)
-    """Feriados/recessos que caíram no periodo e foram pulados."""
+    """Feriados/recessos que caíram no período e foram pulados."""
     dias_recesso: int = 0
-    """Quantidade de dias de recesso forense que afetaram o calculo."""
+    """Quantidade de dias de recesso forense que afetaram o cálculo."""
     uf: str | None = None
-    """UF considerada no calculo (influencia feriados estaduais)."""
+    """UF considerada no cálculo (influencia feriados estaduais)."""
     aviso: str = ""
-    """Aviso de limitacoes do calculo."""
+    """Aviso de limitações do cálculo."""
 
 
 class _CalendarioCache:
     """Cache de feriados por UF e ano, thread-safe via Lock.
 
     Uso interno: asyncio single-thread. O Lock garante corretude caso o
-    servidor seja chamado com concorrencia real em Fase 3+ (ex: multiplas
-    requisicoes HTTP simultaneas).
+    servidor seja chamado com concorrência real em Fase 3+ (ex: múltiplas
+    requisições HTTP simultâneas).
     """
 
     def __init__(self) -> None:
@@ -115,25 +115,25 @@ class _CalendarioCache:
         self._lock = threading.Lock()
 
     def _sexta_santa(self, ano: int) -> datetime.date:
-        """Calcula a Sexta-feira Santa (2 dias antes da Pascoa)."""
+        """Calcula a Sexta-feira Santa (2 dias antes da Páscoa)."""
         pascoa: datetime.date = easter(ano)
         return pascoa - datetime.timedelta(days=2)
 
     def _feriados_nacionais_base(self, ano: int) -> set[datetime.date]:
         """Feriados nacionais via workalendar + patches manuais.
 
-        Patches necessarios:
-        - Sexta-feira Santa: feriado movel nao incluido no workalendar Brasil
-        - Dia da Consciencia Negra (20/nov): feriado nacional desde 2024
-          (Lei 14.759/2023); workalendar v17 nao inclui essa data
+        Patches necessários:
+        - Sexta-feira Santa: feriado móvel não incluído no workalendar Brasil
+        - Dia da Consciência Negra (20/nov): feriado nacional desde 2024
+          (Lei 14.759/2023); workalendar v17 não inclui essa data
         """
         from workalendar.america import Brazil
 
         cal = Brazil()
         feriados = {d for d, _ in cal.holidays(ano)}
         feriados.add(self._sexta_santa(ano))
-        # Patch: 20/nov = Dia da Consciencia Negra (Lei 14.759/2023, vigente a
-        # partir de 2024). workalendar v17 nao inclui; patch manual necessario.
+        # Patch: 20/nov = Dia da Consciência Negra (Lei 14.759/2023, vigente a
+        # partir de 2024). workalendar v17 não inclui; patch manual necessário.
         if ano >= 2024:
             feriados.add(datetime.date(ano, 11, 20))
         return feriados
@@ -141,7 +141,7 @@ class _CalendarioCache:
     def _nomes_nacionais_base(self, ano: int) -> dict[datetime.date, str]:
         """Nomes dos feriados nacionais (inclui patches manuais).
 
-        Constroi o mapa date->nome uma unica vez por ano; chamadas subsequentes
+        Constrói o mapa date->nome uma única vez por ano; chamadas subsequentes
         devem usar get_nomes() que cacheia o resultado.
         """
         from workalendar.america import Brazil
@@ -150,7 +150,7 @@ class _CalendarioCache:
         nomes: dict[datetime.date, str] = {d: str(n) for d, n in cal.holidays(ano)}
         nomes[self._sexta_santa(ano)] = "Sexta-feira Santa"
         if ano >= 2024:
-            nomes[datetime.date(ano, 11, 20)] = "Dia da Consciencia Negra"
+            nomes[datetime.date(ano, 11, 20)] = "Dia da Consciência Negra"
         return nomes
 
     def _feriados_estaduais(self, uf: str, ano: int) -> set[datetime.date]:
@@ -164,7 +164,7 @@ class _CalendarioCache:
         if cal_class is None:
             return set()
         cal_uf = cal_class()
-        # feriados do estado inclui nacionais; pegamos so os extras
+        # feriados do estado inclui nacionais; pegamos só os extras
         nacionais = self._feriados_nacionais_base(ano)
         todos_uf = {d for d, _ in cal_uf.holidays(ano)}
         return todos_uf - nacionais
@@ -202,7 +202,7 @@ class _CalendarioCache:
         """Retorna mapa date->nome para o ano e UF dados (com cache).
 
         Evita instanciar Brazil() ou chamar holidays() repetidamente;
-        o resultado e calculado uma unica vez por (uf, ano).
+        o resultado é calculado uma única vez por (uf, ano).
         """
         chave = (uf.upper() if uf else None, ano)
         with self._lock:
@@ -228,7 +228,7 @@ def _em_recesso(data: datetime.date) -> bool:
 
 
 def _eh_dia_util_forense(data: datetime.date, feriados: set[datetime.date]) -> bool:
-    """Retorna True se a data eh dia util para fins de prazo processual.
+    """Retorna True se a data é dia útil para fins de prazo processual.
 
     Considera: fim de semana, feriados nacionais/estaduais e recesso forense.
     """
@@ -246,18 +246,18 @@ def calcular_prazo(
     dias_uteis: int,
     uf: str | None = None,
 ) -> ResultadoCalculo:
-    """Calcula o prazo processual em dias uteis a partir da data de intimacao.
+    """Calcula o prazo processual em dias úteis a partir da data de intimação.
 
     Regras aplicadas:
-    - O prazo comeca a correr no primeiro dia util SEGUINTE a data de intimacao
-      (art. 224 CPC). A data de intimacao em si nao entra na contagem.
-    - Sabados, domingos, feriados nacionais, feriados estaduais (se UF fornecida)
-      e dias de recesso forense (20/dez a 20/jan) sao ignorados.
-    - O prazo termina no ultimo dia util contado.
+    - O prazo começa a correr no primeiro dia útil SEGUINTE à data de intimação
+      (art. 224 CPC). A data de intimação em si não entra na contagem.
+    - Sábados, domingos, feriados nacionais, feriados estaduais (se UF fornecida)
+      e dias de recesso forense (20/dez a 20/jan) são ignorados.
+    - O prazo termina no último dia útil contado.
 
     Args:
-        data_intimacao: Data de intimacao/publicacao (dia 0, nao entra na contagem).
-        dias_uteis: Quantidade de dias uteis do prazo (ex: 15 para contestacao).
+        data_intimacao: Data de intimação/publicação (dia 0, não entra na contagem).
+        dias_uteis: Quantidade de dias úteis do prazo (ex: 15 para contestação).
         uf: Sigla da UF para incluir feriados estaduais (ex: 'SP', 'RJ').
             Se omitida, usa apenas feriados nacionais.
 
@@ -267,7 +267,7 @@ def calcular_prazo(
     if dias_uteis <= 0:
         raise ValueError(f"dias_uteis deve ser positivo, recebeu {dias_uteis}")
 
-    # Pre-carrega feriados por ano conforme necessario
+    # Pré-carrega feriados por ano conforme necessário
     feriados_por_ano: dict[int, set[datetime.date]] = {}
 
     def _get_feriados(ano: int) -> set[datetime.date]:
@@ -278,13 +278,13 @@ def calcular_prazo(
     def _util(data: datetime.date) -> bool:
         return _eh_dia_util_forense(data, _get_feriados(data.year))
 
-    # Art. 224: termo inicial = primeiro dia util APOS a intimacao
+    # Art. 224: termo inicial = primeiro dia útil APÓS a intimação
     candidato = data_intimacao + datetime.timedelta(days=1)
     while not _util(candidato):
         candidato += datetime.timedelta(days=1)
     termo_inicial = candidato
 
-    # Contar dias_uteis a partir do termo_inicial (inclusive)
+    # Contar dias_uteis a partir do termo_inicial (inclusivo)
     dias_contados = 0
     cursor = termo_inicial
     data_final = termo_inicial
@@ -295,10 +295,10 @@ def calcular_prazo(
             data_final = cursor
         cursor += datetime.timedelta(days=1)
 
-    # Coletar feriados/recessos que afetaram o calculo.
-    # O scan vai de (data_intimacao + 1) ate data_final para capturar tambem
-    # feriados que atrasaram o proprio termo inicial (ex: Tiradentes forcou
-    # o termo a avancar de 21/abr para 22/abr).
+    # Coletar feriados/recessos que afetaram o cálculo.
+    # O scan vai de (data_intimacao + 1) até data_final para capturar também
+    # feriados que atrasaram o próprio termo inicial (ex: Tiradentes forçou
+    # o termo a avançar de 21/abr para 22/abr).
     feriados_periodo: list[tuple[datetime.date, str]] = []
     dias_recesso = 0
     dia_scan = data_intimacao + datetime.timedelta(days=1)
@@ -317,20 +317,20 @@ def calcular_prazo(
         iso = UF_PARA_ISO.get(uf.upper())
         if iso is None:
             uf_aviso = (
-                f" ATENCAO: UF '{uf}' nao tem feriados estaduais mapeados; "
+                f" ATENÇÃO: UF '{uf}' não tem feriados estaduais mapeados; "
                 "apenas feriados nacionais foram considerados."
             )
 
     aviso = (
-        "AVISO LEGAL: Este calculo e uma estimativa tecnica baseada em feriados nacionais"
+        "AVISO LEGAL: Este cálculo é uma estimativa técnica baseada em feriados nacionais"
         + (f" e estaduais ({uf})" if uf else "")
         + " e no recesso forense (art. 220 CPC). "
-        "NAO considera: feriados municipais, pontos facultativos de Carnaval, "
+        "NÃO considera: feriados municipais, pontos facultativos de Carnaval, "
         "Corpus Christi (ponto facultativo federal suspenso na maioria dos tribunais, "
         "mas sem status de feriado legal nacional), "
-        "suspensoes extraordinarias (pandemias, catastrofes), prazos proprios de "
-        "cada tribunal ou portarias de antecipacao de recesso. "
-        "O advogado responsavel DEVE verificar o prazo efetivo no portal do tribunal. "
+        "suspensões extraordinárias (pandemias, catástrofes), prazos próprios de "
+        "cada tribunal ou portarias de antecipação de recesso. "
+        "O advogado responsável DEVE verificar o prazo efetivo no portal do tribunal. "
         "(OAB Rec. 001/2024)" + uf_aviso
     )
 
@@ -347,10 +347,10 @@ def calcular_prazo(
 
 
 def _nome_feriado(data: datetime.date, uf: str | None) -> str:
-    """Retorna o nome do feriado para uma data (melhor esforco).
+    """Retorna o nome do feriado para uma data (melhor esforço).
 
-    Usa o cache do modulo para evitar instanciar Brazil() e chamar
-    holidays() repetidamente. O mapa date->nome e calculado uma unica
+    Usa o cache do módulo para evitar instanciar Brazil() e chamar
+    holidays() repetidamente. O mapa date->nome é calculado uma única
     vez por (uf, ano) e reutilizado em chamadas subsequentes.
     """
     nomes = _cache.get_nomes(uf, data.year)

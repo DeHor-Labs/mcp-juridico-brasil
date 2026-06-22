@@ -1,18 +1,18 @@
 """Store de snapshots de processos monitorados.
 
-Guarda o ultimo snapshot (dados + timestamp) por numero de processo.
-Persistencia em memoria por sessao MCP; persistencia em arquivo JSON
+Guarda o último snapshot (dados + timestamp) por número de processo.
+Persistência em memória por sessão MCP; persistência em arquivo JSON
 opcional via JURIDICO_SNAPSHOT_DIR no ambiente.
 
-Decisao de design (Fase 2):
-- Store em memoria e suficiente para o caso de uso de sessao unica
-- Arquivo JSON local oferece persistencia simples entre reinicializacoes
+Decisão de design (Fase 2):
+- Store em memória é suficiente para o caso de uso de sessão única
+- Arquivo JSON local oferece persistência simples entre reinicializações
 - Banco de dados relacional ou Redis fica para Fase 3+ (multi-tenant, escala)
 
-Limitacoes documentadas:
-- Estado em memoria se perde ao reiniciar o servidor MCP
-- Sem controle de concorrencia (apenas asyncio, sem multiprocessing)
-- Sem expiracao automatica de snapshots (ficar indefinidamente na memoria)
+Limitações documentadas:
+- Estado em memória se perde ao reiniciar o servidor MCP
+- Sem controle de concorrência (apenas asyncio, sem multiprocessing)
+- Sem expiração automática de snapshots (ficam indefinidamente na memória)
 """
 
 from __future__ import annotations
@@ -80,9 +80,9 @@ def salvar_snapshot(
     """Salva snapshot de um processo monitorado.
 
     Args:
-        numero_processo: Numero CNJ normalizado do processo.
+        numero_processo: Número CNJ normalizado do processo.
         tribunal: Sigla do tribunal.
-        dados: Dicionario com dados do processo (saida de buscar_processo_por_numero).
+        dados: Dicionário com dados do processo (saída de buscar_processo_por_numero).
 
     Returns:
         Snapshot salvo com metadados de timestamp.
@@ -101,15 +101,15 @@ def salvar_snapshot(
 
 
 def obter_snapshot(numero_processo: str) -> dict[str, Any] | None:
-    """Recupera o ultimo snapshot de um processo.
+    """Recupera o último snapshot de um processo.
 
-    Busca primeiro na memoria; se nao encontrar, tenta o arquivo local.
+    Busca primeiro na memória; se não encontrar, tenta o arquivo local.
 
     Args:
-        numero_processo: Numero CNJ normalizado do processo.
+        numero_processo: Número CNJ normalizado do processo.
 
     Returns:
-        Snapshot ou None se nao houver.
+        Snapshot ou None se não houver.
     """
     with _lock:
         em_memoria = _snapshots.get(numero_processo)
@@ -134,13 +134,13 @@ def listar_processos_monitorados() -> list[str]:
 
 
 def remover_snapshot(numero_processo: str) -> bool:
-    """Remove snapshot de um processo da memoria e do disco.
+    """Remove snapshot de um processo da memória e do disco.
 
     Args:
-        numero_processo: Numero CNJ normalizado.
+        numero_processo: Número CNJ normalizado.
 
     Returns:
-        True se havia snapshot e foi removido; False se nao existia.
+        True se havia snapshot e foi removido; False se não existia.
     """
     with _lock:
         existia = numero_processo in _snapshots

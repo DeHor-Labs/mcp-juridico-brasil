@@ -21,25 +21,25 @@ async def monitorar_processo(
     tribunal: str,
     desde_iso: str,
 ) -> dict[str, object]:
-    """Verifica se um processo teve atualizacao apos a data informada.
+    """Verifica se um processo teve atualização após a data informada.
 
-    Implementacao Fase 2: polling via DataJud (sem tempo real).
-    Fase 3 substituira por notificacao push via provider comercial.
+    Implementação Fase 2: polling via DataJud (sem tempo real).
+    Fase 3 substituirá por notificação push via provider comercial.
 
     Args:
-        numero_processo: Numero no formato CNJ.
-        tribunal: Sigla do tribunal (obrigatoria para monitoramento).
-        desde_iso: Data/hora de referencia em formato ISO 8601
+        numero_processo: Número no formato CNJ.
+        tribunal: Sigla do tribunal (obrigatória para monitoramento).
+        desde_iso: Data/hora de referência em formato ISO 8601
                    (ex: '2024-01-15T08:00:00').
 
     Returns:
-        Dicionario indicando se houve atualizacao e a data da ultima.
+        Dicionário indicando se houve atualização e a data da última.
     """
     if not validar_numero_cnj(numero_processo):
         raise JuridicoValidationError(
             field="numero_processo",
             value=numero_processo,
-            reason="Formato invalido. Use o padrao CNJ: NNNNNNN-DD.AAAA.J.TT.OOOO.",
+            reason="Formato inválido. Use o padrão CNJ: NNNNNNN-DD.AAAA.J.TT.OOOO.",
         )
 
     try:
@@ -48,7 +48,7 @@ async def monitorar_processo(
         raise JuridicoValidationError(
             field="desde_iso",
             value=desde_iso,
-            reason="Data invalida. Use formato ISO 8601: YYYY-MM-DDTHH:MM:SS",
+            reason="Data inválida. Use formato ISO 8601: YYYY-MM-DDTHH:MM:SS",
         ) from exc
 
     numero_normalizado = normalizar_numero_cnj(numero_processo)
@@ -76,7 +76,7 @@ async def monitorar_processo(
         "data_ultima_atualizacao_datajud": ultima_iso,
         "aviso_defasagem": (
             "O DataJud pode ter atraso de T+1 a T+7 dias. "
-            "Para monitoramento de prazos criticos, use um provider comercial "
+            "Para monitoramento de prazos críticos, use um provider comercial "
             "com webhook (Fase 3) ou acesse diretamente o portal do tribunal."
         ),
     }

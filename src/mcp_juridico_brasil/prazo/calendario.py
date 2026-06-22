@@ -111,6 +111,7 @@ class _CalendarioCache:
 
     def __init__(self) -> None:
         self._cache: dict[tuple[str | None, int], set[datetime.date]] = {}
+        self._nomes: dict[tuple[str | None, int], dict[datetime.date, str]] = {}
         self._lock = threading.Lock()
 
     def _sexta_santa(self, ano: int) -> datetime.date:
@@ -137,6 +138,21 @@ class _CalendarioCache:
             feriados.add(datetime.date(ano, 11, 20))
         return feriados
 
+    def _nomes_nacionais_base(self, ano: int) -> dict[datetime.date, str]:
+        """Nomes dos feriados nacionais (inclui patches manuais).
+
+        Constroi o mapa date->nome uma unica vez por ano; chamadas subsequentes
+        devem usar get_nomes() que cacheia o resultado.
+        """
+        from workalendar.america import Brazil
+
+        cal = Brazil()
+        nomes: dict[datetime.date, str] = {d: str(n) for d, n in cal.holidays(ano)}
+        nomes[self._sexta_santa(ano)] = "Sexta-feira Santa"
+        if ano >= 2024:
+            nomes[datetime.date(ano, 11, 20)] = "Dia da Consciencia Negra"
+        return nomes
+
     def _feriados_estaduais(self, uf: str, ano: int) -> set[datetime.date]:
         """Feriados estaduais via workalendar subregion."""
         iso = UF_PARA_ISO.get(uf.upper())
@@ -153,6 +169,24 @@ class _CalendarioCache:
         todos_uf = {d for d, _ in cal_uf.holidays(ano)}
         return todos_uf - nacionais
 
+    def _nomes_estaduais(self, uf: str, ano: int) -> dict[datetime.date, str]:
+        """Nomes dos feriados estaduais extras (sem os nacionais)."""
+        iso = UF_PARA_ISO.get(uf.upper())
+        if iso is None:
+            return {}
+        from workalendar.registry import registry
+
+        cal_class = registry.get(iso)
+        if cal_class is None:
+            return {}
+        cal_uf = cal_class()
+        nacionais = self._feriados_nacionais_base(ano)
+        return {
+            d: f"{n} (feriado estadual {uf})"
+            for d, n in cal_uf.holidays(ano)
+            if d not in nacionais
+        }
+
     def get_feriados(self, uf: str | None, ano: int) -> set[datetime.date]:
         """Retorna conjunto de feriados para o ano e UF dados (com cache)."""
         chave = (uf.upper() if uf else None, ano)
@@ -165,6 +199,21 @@ class _CalendarioCache:
                 else:
                     self._cache[chave] = nacionais
             return self._cache[chave]
+
+    def get_nomes(self, uf: str | None, ano: int) -> dict[datetime.date, str]:
+        """Retorna mapa date->nome para o ano e UF dados (com cache).
+
+        Evita instanciar Brazil() ou chamar holidays() repetidamente;
+        o resultado e calculado uma unica vez por (uf, ano).
+        """
+        chave = (uf.upper() if uf else None, ano)
+        with self._lock:
+            if chave not in self._nomes:
+                nomes = self._nomes_nacionais_base(ano)
+                if uf:
+                    nomes.update(self._nomes_estaduais(uf, ano))
+                self._nomes[chave] = nomes
+            return self._nomes[chave]
 
 
 _cache = _CalendarioCache()
@@ -302,40 +351,12 @@ def calcular_prazo(
 def _nome_feriado(data: datetime.date, uf: str | None) -> str:
     """Retorna o nome do feriado para uma data (melhor esforco).
 
-    Consulta o workalendar para obter o nome textual do feriado. Patches
-    manuais (Sexta Santa e Consciencia Negra) sao verificados antes.
-    A instancia de Brazil() e reutilizada pelo modulo quando possivel;
-    para o scan do periodo, prefira obter (data, nome) diretamente de
-    cal.holidays() em vez de chamar esta funcao em loop.
+    Usa o cache do modulo para evitar instanciar Brazil() e chamar
+    holidays() repetidamente. O mapa date->nome e calculado uma unica
+    vez por (uf, ano) e reutilizado em chamadas subsequentes.
     """
-    ano = data.year
-    # Sexta-feira Santa (patch manual - nao tem nome no workalendar Brasil)
-    sexta = easter(ano) - datetime.timedelta(days=2)
-    if data == sexta:
-        return "Sexta-feira Santa"
-    # Dia da Consciencia Negra (patch manual - Lei 14.759/2023)
-    if ano >= 2024 and data.month == 11 and data.day == 20:
-        return "Dia da Consciencia Negra"
-    # Tentativa no calendario nacional via workalendar
-    from workalendar.america import Brazil
-
-    cal_br = Brazil()
-    for d, nome in cal_br.holidays(ano):
-        if d == data:
-            return str(nome)
-    # Tentativa no calendario estadual
-    if uf:
-        iso = UF_PARA_ISO.get(uf.upper())
-        if iso:
-            from workalendar.registry import registry
-
-            cal_class = registry.get(iso)
-            if cal_class:
-                cal_uf = cal_class()
-                for d, nome in cal_uf.holidays(ano):
-                    if d == data:
-                        return f"{nome} (feriado estadual {uf})"
-    return "Feriado"
+    nomes = _cache.get_nomes(uf, data.year)
+    return nomes.get(data, "Feriado")
 
 
 __all__ = [

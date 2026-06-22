@@ -6,7 +6,7 @@ Fase 3 (provider comercial): substituir polling por webhook push.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from mcp_juridico_brasil._core import JuridicoValidationError, get_logger
 from mcp_juridico_brasil.datajud.provider import DataJudProvider
@@ -59,21 +59,21 @@ async def monitorar_processo(
         desde=desde_iso,
     )
 
-    houve_atualizacao = await _provider.verificar_atualizacao(
-        numero_normalizado, tribunal, desde_iso
-    )
-
     processo = await _provider.buscar_processo(numero_normalizado, tribunal)
-    ultima = (
-        processo.data_ultima_atualizacao.isoformat() if processo.data_ultima_atualizacao else None
-    )
+    ultima = processo.data_ultima_atualizacao
+    ultima_iso = ultima.isoformat() if ultima else None
+
+    desde = datetime.fromisoformat(desde_iso)
+    if desde.tzinfo is None:
+        desde = desde.replace(tzinfo=timezone.utc)
+    houve_atualizacao = ultima is not None and ultima > desde
 
     return {
         "numero_processo": numero_normalizado,
         "tribunal": tribunal,
         "desde": desde_iso,
         "houve_atualizacao": houve_atualizacao,
-        "data_ultima_atualizacao_datajud": ultima,
+        "data_ultima_atualizacao_datajud": ultima_iso,
         "aviso_defasagem": (
             "O DataJud pode ter atraso de T+1 a T+7 dias. "
             "Para monitoramento de prazos criticos, use um provider comercial "

@@ -43,7 +43,7 @@ async def monitorar_processo(
         )
 
     try:
-        datetime.fromisoformat(desde_iso)
+        datetime.fromisoformat(desde_iso.replace("Z", "+00:00"))
     except ValueError as exc:
         raise JuridicoValidationError(
             field="desde_iso",
@@ -63,7 +63,7 @@ async def monitorar_processo(
     ultima = processo.data_ultima_atualizacao
     ultima_iso = ultima.isoformat() if ultima else None
 
-    desde = datetime.fromisoformat(desde_iso)
+    desde = datetime.fromisoformat(desde_iso.replace("Z", "+00:00"))
     if desde.tzinfo is None:
         desde = desde.replace(tzinfo=timezone.utc)
     houve_atualizacao = ultima is not None and ultima > desde

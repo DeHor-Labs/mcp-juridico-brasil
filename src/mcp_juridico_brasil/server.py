@@ -3,7 +3,7 @@
 Registra tools e resources no FastMCP e expõe o servidor via stdio (padrão)
 ou HTTP streamable (Smithery/Docker).
 
-Tools expostas (Fase 2):
+Tools expostas (Fase 4):
 - buscar_processo_por_numero  : consulta completa por número CNJ
 - listar_movimentacoes        : histórico de andamentos
 - resumir_andamento           : dados + instrução de resumo para o LLM
@@ -11,12 +11,11 @@ Tools expostas (Fase 2):
 - calcular_proximo_prazo      : cálculo em dias úteis com calendário forense
 - listar_processos_monitorados: lista processos com snapshot em memória
 - listar_tribunais            : lista de siglas suportadas
+- listar_intimacoes           : comunicações do DJe (somente leitura)
+- confirmar_leitura_intimacao : marca leitura no DJe (EFEITO JURÍDICO - gate duplo)
 
 Resources expostos (Fase 2):
 - processo://{numero_processo}/snapshot  : último snapshot do processo
-
-Fases futuras adicionarão tools de webhook push (Fase 3) e
-intimações DJe (Fase 4) sem quebrar a interface existente.
 """
 
 from __future__ import annotations
@@ -27,6 +26,7 @@ import fastmcp
 
 from mcp_juridico_brasil._core import configure_logging, settings
 from mcp_juridico_brasil.datajud.tribunais import listar_tribunais as _listar_tribunais
+from mcp_juridico_brasil.dje.tools import confirmar_leitura_intimacao, listar_intimacoes
 from mcp_juridico_brasil.monitoramento.store import (
     listar_processos_monitorados as _listar_monitorados,
 )
@@ -41,15 +41,18 @@ from mcp_juridico_brasil.resumo.tools import resumir_andamento
 
 app = fastmcp.FastMCP(
     name="MCP Juridico Brasil",
-    version="0.2.0",
+    version="0.3.0",
     instructions=(
         "Ferramentas de acompanhamento de processos judiciais brasileiros via DataJud CNJ. "
         "Cobertura de 91 tribunais. Dados com possível defasagem de T+1 a T+7 dias. "
         "Fase 2: cálculo de prazos em dias úteis (art. 219/220/224 CPC) com calendário "
         "forense nacional e estadual. "
-        "AVISO: Estas ferramentas são destinadas a advogados e profissionais do direito. "
+        "Fase 4: acesso ao Domicílio Judicial Eletrônico (DJe) via API Comunica. "
+        "AVISO CRÍTICO DJe: confirmar_leitura_intimacao tem EFEITO JURÍDICO REAL e inicia "
+        "prazo processual. Opera em dry-run por padrão - requer gate duplo explícito. "
+        "AVISO GERAL: Estas ferramentas são destinadas a advogados e profissionais do direito. "
         "Não constituem consultoria jurídica. A análise final é responsabilidade do "
-        "advogado habilitado (OAB Recomendação 001/2024)."
+        "advogado habilitado (OAB Recomendação 001/2024 | Resolução CNJ 455/2022)."
     ),
 )
 
@@ -62,6 +65,8 @@ app.tool()(listar_movimentacoes)
 app.tool()(resumir_andamento)
 app.tool()(monitorar_processo)
 app.tool()(calcular_proximo_prazo)
+app.tool()(listar_intimacoes)
+app.tool()(confirmar_leitura_intimacao)
 
 
 @app.tool()

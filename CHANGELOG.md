@@ -15,34 +15,33 @@ versionamento seguindo [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### Adicionado
 
-#### Fase 1 - Consulta processual via DataJud CNJ (6 tools)
+#### Fase 1 - Consulta processual via DataJud CNJ
 
-- `consultar_processo` - consulta um processo pelo número CNJ unificado (NNNNNNN-DD.AAAA.J.TT.OOOO),
-  retornando dados cadastrais, classe, assunto, órgão julgador, valor da causa e situação atual.
-  Cobertura de 91 tribunais (STF, STJ, TJs, TRFs, TRTs e especializados).
+- `buscar_processo_por_numero` - consulta completa de um processo pelo número CNJ unificado
+  (NNNNNNN-DD.AAAA.J.TT.OOOO), retornando dados cadastrais, classe, assunto, órgão julgador,
+  valor da causa e situação atual. Cobertura de 91 tribunais (STF, STJ, TJs, TRFs, TRTs e
+  especializados).
 - `listar_movimentacoes` - lista as movimentações processuais com data, código CNJ de movimento
   e complementos. Suporta cursor de navegação por offset e filtro por período.
-- `resumir_processo` - gera resumo estruturado do processo em linguagem natural: partes, pedidos,
-  fase atual, últimas movimentações e próximos passos relevantes.
-- `buscar_processos_parte` - busca processos por nome ou CPF/CNPJ de uma das partes, com filtro
-  de tribunal e classe processual.
-- `listar_tribunais` - retorna a lista de tribunais cobertos pela API DataJud com seus códigos,
-  nomes e tipos (estadual, federal, trabalhista, superior).
-- `verificar_disponibilidade_datajud` - verifica a disponibilidade da API DataJud e o status
-  do índice de cada tribunal, útil para diagnóstico antes de consultas em lote.
+- `resumir_andamento` - retorna dados do processo mais instrução de resumo estruturado para o
+  modelo de linguagem: partes, fase atual, últimas movimentações e próximos passos relevantes.
+- `monitorar_processo` - verifica atualizações desde uma data de referência (polling com snapshot
+  em memória), retornando flag de atualização e diff de movimentações novas.
+- `listar_tribunais` - retorna a lista completa dos 91 tribunais cobertos pela API DataJud com
+  suas siglas (Portaria CNJ 160/2020). Use as siglas retornadas no parâmetro `tribunal` das
+  demais tools.
 
 #### Fase 2 - Cálculo de prazo e resources de monitoramento
 
-- `calcular_prazo` - calcula o prazo processual a partir de uma data-base, considerando
-  dias úteis, feriados nacionais, estaduais e recessos forenses configuráveis por tribunal.
-  Usa `workalendar` para calendário de feriados brasileiro. Retorna data de vencimento,
-  dias úteis percorridos e lista de dias não computados com justificativa.
-- `verificar_prazo_vencimento` - verifica se um prazo está dentro do alerta (configurável,
-  padrão 3 dias úteis) ou já vencido, retornando status semáforo (ok, alerta, vencido).
-- Resource `processo://{numero_cnj}` - resource MCP de acompanhamento: retorna snapshot
-  atualizado do processo a cada leitura, adequado para monitoramento periódico por clientes MCP.
-- Resource `movimentacoes://{numero_cnj}` - resource MCP com as últimas movimentações do
-  processo, com suporte a `since` para recuperar apenas novidades desde a última consulta.
+- `calcular_proximo_prazo` - calcula o próximo prazo processual a partir de uma data-base,
+  considerando dias úteis, feriados nacionais, estaduais e recessos forenses configuráveis por
+  tribunal (art. 219, 220 e 224 do CPC). Usa `workalendar` para calendário brasileiro. Retorna
+  data de vencimento, dias úteis percorridos e lista de dias não computados com justificativa.
+- `listar_processos_monitorados` - lista os números de processos que possuem snapshot salvo na
+  sessão MCP atual. Use o resource `processo://{numero}/snapshot` para ler os dados completos.
+- Resource `processo://{numero_processo}/snapshot` - retorna o último snapshot capturado por
+  `buscar_processo_por_numero` ou `monitorar_processo` para o processo informado. O estado é
+  mantido em memória da sessão; configure `JURIDICO_SNAPSHOT_DIR` para persistência em arquivo.
 
 [Unreleased]: https://github.com/DeHor-Labs/mcp-juridico-brasil/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/DeHor-Labs/mcp-juridico-brasil/releases/tag/v0.1.0

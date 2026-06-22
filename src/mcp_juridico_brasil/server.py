@@ -41,7 +41,7 @@ from mcp_juridico_brasil.resumo.tools import resumir_andamento
 
 app = fastmcp.FastMCP(
     name="MCP Juridico Brasil",
-    version="0.3.0",
+    version="0.1.0",
     instructions=(
         "Ferramentas de acompanhamento de processos judiciais brasileiros via DataJud CNJ. "
         "Cobertura de 91 tribunais. Dados com possível defasagem de T+1 a T+7 dias. "

@@ -13,6 +13,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
+import httpx
+
 from mcp_juridico_brasil._core import (
     HTTPClient,
     JuridicoAPIError,
@@ -25,7 +27,7 @@ from mcp_juridico_brasil._core import (
 )
 from mcp_juridico_brasil.shared.schemas import Assunto, Movimentacao, OrgaoJulgador, Parte, Processo
 
-from .tribunais import indice_para_url, listar_tribunais
+from .tribunais import indice_para_url, listar_tribunais, sigla_por_numero_cnj
 
 logger = get_logger(__name__)
 
@@ -60,7 +62,17 @@ class DataJudClient:
         """
         query = {"query": {"match": {"numeroProcesso": numero_processo}}, "size": 1}
         async with self._http(tribunal) as client:
-            data = await client.post("", json=query)
+            try:
+                data = await client.post("", json=query)
+            except httpx.HTTPStatusError as exc:
+                # O metodo documenta JuridicoAPIError para falhas de
+                # comunicacao; sem esta conversao a HTTPStatusError crua
+                # escapava e abortava a varredura multi-tribunal.
+                raise JuridicoAPIError(
+                    source="DataJud",
+                    status_code=exc.response.status_code,
+                    reason=f"Consulta ao indice do tribunal '{tribunal}' falhou.",
+                ) from exc
 
         hits = data.get("hits", {}).get("hits", [])
         if not hits:
@@ -79,7 +91,16 @@ class DataJudClient:
         Itera pelos tribunais informados (ou por todos os suportados) até
         encontrar o processo.
         """
-        targets = tribunais or listar_tribunais()
+        if tribunais:
+            targets = tribunais
+        else:
+            targets = listar_tribunais()
+            # O proprio numero CNJ identifica o tribunal (segmentos J e TR):
+            # tentar por ele primeiro resolve em 1 requisicao em vez de ate 91.
+            provavel = sigla_por_numero_cnj(numero_processo)
+            if provavel:
+                targets = [provavel] + [t for t in targets if t != provavel]
+
         last_error: Exception | None = None
         for tribunal in targets:
             try:

@@ -47,8 +47,8 @@ src/mcp_juridico_brasil/
 
 ## Fonte de dados principal: DataJud CNJ
 
-A API DataJud do Conselho Nacional de Justiça fornece acesso a dados processuais de
-91 tribunais brasileiros (STF, STJ, TJs, TRFs, TRTs, etc.). Toda consulta processual
+A API DataJud do Conselho Nacional de Justiça fornece acesso a dados processuais dos
+tribunais brasileiros; o servidor cadastra 92 siglas (STF, STJ, TJs, TRFs, TRTs, etc.). Toda consulta processual
 deve passar pelo cliente em `processual/client.py` ou pelo módulo correspondente.
 
 Documentação oficial: https://datajud-wiki.cnj.jus.br/

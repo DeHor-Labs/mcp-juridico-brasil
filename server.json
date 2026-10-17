@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.DeHor-Labs/mcp-juridico-brasil",
   "title": "MCP Juridico Brasil",
-  "description": "Acompanhamento de processos judiciais brasileiros via DataJud CNJ. Consulta, movimentacoes, resumo e alertas de prazo. Cobertura de 91 tribunais.",
+  "description": "Acompanhamento de processos judiciais brasileiros via DataJud CNJ. Consulta, movimentacoes, resumo e alertas de prazo. 92 siglas de tribunais cadastradas.",
   "version": "0.1.0",
   "repository": {
     "url": "https://github.com/DeHor-Labs/mcp-juridico-brasil",

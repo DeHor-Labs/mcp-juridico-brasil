@@ -1,7 +1,7 @@
 """Mapeamento de siglas de tribunais para indices DataJud.
 
 Fonte: https://datajud-wiki.cnj.jus.br/api-publica/acesso/
-Atualizado para cobertura de 91 tribunais conforme Portaria CNJ 160/2020.
+Atualizado com 92 siglas de tribunais conforme Portaria CNJ 160/2020.
 """
 
 from __future__ import annotations
@@ -125,7 +125,7 @@ def sigla_por_numero_cnj(numero_processo: str) -> str | None:
 
     O formato NNNNNNN-DD.AAAA.J.TR.OOOO (Res. CNJ 65/2008) ja identifica o
     tribunal: J e o segmento do Judiciario e TR o codigo do tribunal. Deduzir
-    daqui evita varrer os 91 indices quando o tribunal nao foi informado.
+    daqui evita varrer os 92 indices quando o tribunal nao foi informado.
 
     Retorna None quando o numero e invalido ou quando o tribunal deduzido nao
     esta no mapa de indices -- nesse caso o chamador deve manter o fallback.

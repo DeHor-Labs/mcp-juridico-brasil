@@ -44,7 +44,7 @@ app = fastmcp.FastMCP(
     version="0.1.0",
     instructions=(
         "Ferramentas de acompanhamento de processos judiciais brasileiros via DataJud CNJ. "
-        "Cobertura de 91 tribunais. Dados com possível defasagem de T+1 a T+7 dias. "
+        "92 siglas de tribunais cadastradas. Dados com possível defasagem de T+1 a T+7 dias. "
         "Fase 2: cálculo de prazos em dias úteis (art. 219/220/224 CPC) com calendário "
         "forense nacional e estadual. "
         "Fase 4: acesso ao Domicílio Judicial Eletrônico (DJe) via API Comunica. "
@@ -71,7 +71,7 @@ app.tool()(confirmar_leitura_intimacao)
 
 @app.tool()
 async def listar_tribunais() -> dict[str, object]:
-    """Lista todos os tribunais suportados pelo MCP (91 ao total).
+    """Lista as siglas de tribunais cadastradas no MCP (92 ao total).
 
     Retorna siglas que podem ser usadas no parâmetro 'tribunal' das demais tools.
     """

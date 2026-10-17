@@ -96,7 +96,7 @@ class DataJudClient:
         else:
             targets = listar_tribunais()
             # O proprio numero CNJ identifica o tribunal (segmentos J e TR):
-            # tentar por ele primeiro resolve em 1 requisicao em vez de ate 91.
+            # tentar por ele primeiro resolve em 1 requisicao em vez de ate 92.
             provavel = sigla_por_numero_cnj(numero_processo)
             if provavel:
                 targets = [provavel] + [t for t in targets if t != provavel]

@@ -82,9 +82,9 @@
   <rect x="360" y="148" width="62" height="22" rx="11" fill="#4fc3f7" opacity="0.15"/>
   <text x="391" y="163" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" fill="#4fc3f7" text-anchor="middle" font-weight="600">DataJud</text>
 
-  <!-- 91 Tribunais -->
+  <!-- 92 Siglas -->
   <rect x="430" y="148" width="84" height="22" rx="11" fill="#4fc3f7" opacity="0.15"/>
-  <text x="472" y="163" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" fill="#4fc3f7" text-anchor="middle" font-weight="600">91 Tribunais</text>
+  <text x="472" y="163" font-family="'Segoe UI', system-ui, sans-serif" font-size="11" fill="#4fc3f7" text-anchor="middle" font-weight="600">92 Siglas</text>
 
   <!-- Pontos decorativos canto superior direito -->
   <circle cx="720" cy="40" r="3" fill="#4fc3f7" opacity="0.2"/>

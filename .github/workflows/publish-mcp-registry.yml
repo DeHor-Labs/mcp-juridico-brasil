@@ -24,8 +24,11 @@ jobs:
         run: |
           VERSION=$(grep -m1 '^version' pyproject.toml | sed -E 's/.*"([^"]+)".*/\1/')
           echo "Aguardando mcp-juridico-brasil==$VERSION no PyPI"
-          # O job do PyPI roda em paralelo e pode levar mais de 5 min; espera ate 20 min.
-          for i in $(seq 1 120); do
+          # O job do PyPI roda em paralelo e pode levar mais de 5 min; prazo total de 20 min.
+          DEADLINE=$(( $(date +%s) + 1200 ))
+          i=0
+          while [ "$(date +%s)" -lt "$DEADLINE" ]; do
+            i=$((i + 1))
             if curl -sfo /dev/null --connect-timeout 10 --max-time 20 "https://pypi.org/pypi/mcp-juridico-brasil/$VERSION/json"; then
               echo "Pacote $VERSION disponivel no PyPI"; exit 0
             fi

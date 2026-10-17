@@ -75,7 +75,7 @@
       <h1>Seus processos do DataJud, <span class="accent">direto no assistente de IA.</span></h1>
       <p class="lead">Pergunte em português sobre um processo e o seu assistente consulta a API pública do CNJ: classe, órgão julgador, andamentos, resumo para o cliente e prazos em dias úteis. Gratuito, open source e rodando na sua máquina.</p>
       <div class="ctas">
-        <a class="btn btn-primary" href="#instalacao">Instalar em 2 minutos <span aria-hidden="true">→</span></a>
+        <a class="btn btn-primary" href="#instalacao">Ver instalação <span aria-hidden="true">→</span></a>
         <a class="btn btn-ghost" href="https://github.com/DeHor-Labs/mcp-juridico-brasil">Ver no GitHub</a>
       </div>
       <ul class="badges" aria-label="Indicadores do projeto">
@@ -90,15 +90,15 @@
       <div class="chat-bar"><span></span><span></span><span></span><em>exemplo ilustrativo</em></div>
       <div class="msg user">Como está o processo <code>NNNNNNN-DD.AAAA.8.26.OOOO</code>? Teve andamento esta semana?</div>
       <div class="call"><span class="dot"></span>buscar_processo_por_numero<span class="args">tribunal deduzido: TJSP</span></div>
-      <div class="call"><span class="dot"></span>monitorar_processo<span class="args">desde_iso: segunda-feira</span></div>
-      <div class="msg bot">O assistente responde com a classe, o órgão julgador e as últimas movimentações (data, nome e código TPU), diz se houve atualização desde segunda e avisa que o DataJud pode estar alguns dias atrás do portal do tribunal.</div>
+      <div class="call"><span class="dot"></span>monitorar_processo<span class="args">desde_iso: "2026-10-12"</span></div>
+      <div class="msg bot">O assistente responde com a classe, o órgão julgador e as últimas movimentações (data, nome e código TPU), diz se houve atualização desde 12/10 e avisa que o DataJud pode estar atrasado em relação ao portal do tribunal.</div>
     </figure>
   </section>
 
   <section class="col stats" aria-label="Números do projeto, conferidos no código">
     <div><strong>9</strong><span>tools MCP</span></div>
-    <div><strong>92</strong><span>siglas de tribunais no DataJud</span></div>
-    <div><strong>1</strong><span>resource de snapshot</span></div>
+    <div><strong>92</strong><span>siglas de tribunais cadastradas no servidor</span></div>
+    <div><strong>1</strong><span>resource MCP</span></div>
     <div><strong>R$ 0</strong><span>licença MIT</span></div>
   </section>
 
@@ -139,7 +139,7 @@
       <li>
         <p class="q">“Fui intimado hoje. Quando vence a contestação no TJSP?”</p>
         <p class="t"><code>calcular_proximo_prazo</code></p>
-        <p class="a">Conta em dias úteis (arts. 219, 220 e 224 do CPC), com recesso forense, feriados nacionais e estaduais. É uma estimativa de apoio: confira sempre.</p>
+        <p class="a">Conta em dias úteis (arts. 219, 220 e 224 do CPC), com recesso forense e feriados nacionais. Feriados estaduais entram quando a UF é informada. É uma estimativa de apoio: confira sempre.</p>
       </li>
     </ol>
   </section>
@@ -155,14 +155,14 @@
           <dt>listar_movimentacoes</dt><dd>Histórico de andamentos com código TPU e data/hora.</dd>
           <dt>resumir_andamento</dt><dd>Dados do processo mais instrução de resumo para o modelo.</dd>
           <dt>monitorar_processo</dt><dd>Verifica se houve atualização desde uma data.</dd>
-          <dt>listar_processos_monitorados</dt><dd>Processos com snapshot salvo na sessão atual.</dd>
+          <dt>listar_processos_monitorados</dt><dd>Lista os processos com snapshot gravado na sessão. Nesta versão, nenhuma tool de consulta grava snapshot, então a lista vem vazia.</dd>
         </dl>
       </div>
       <div class="tool-group">
-        <h3>Prazos e referência <small>offline</small></h3>
+        <h3>Prazos e referência</h3>
         <dl>
-          <dt>calcular_proximo_prazo</dt><dd>Prazo em dias úteis com calendário forense nacional e estadual.</dd>
-          <dt>listar_tribunais</dt><dd>As siglas aceitas no parâmetro <code>tribunal</code>.</dd>
+          <dt>calcular_proximo_prazo</dt><dd>Prazo em dias úteis com calendário forense. Roda offline quando você informa a data da intimação; sem ela, consulta o DataJud para usar a data da última movimentação. Feriados estaduais só entram com a UF informada.</dd>
+          <dt>listar_tribunais</dt><dd>As 92 siglas cadastradas no servidor e aceitas no parâmetro <code>tribunal</code>. Estar na lista não garante que o DataJud tenha dados daquele tribunal. Offline.</dd>
         </dl>
         <h3>Domicílio Judicial Eletrônico <small>opcional</small></h3>
         <dl>
@@ -171,7 +171,7 @@
         </dl>
         <h3>Resource MCP</h3>
         <dl>
-          <dt>processo://{numero}/snapshot</dt><dd>Último snapshot capturado de um processo.</dd>
+          <dt>processo://{numero}/snapshot</dt><dd>Lê o snapshot gravado de um processo, se existir. Como <code>buscar_processo_por_numero</code> e <code>monitorar_processo</code> não gravam snapshot, nesta versão ele responde que não há snapshot disponível.</dd>
         </dl>
       </div>
     </div>
@@ -179,7 +179,7 @@
 
   <section class="col section" id="instalacao">
     <h2>Instalação</h2>
-    <p class="sub">Precisa do <a href="https://docs.astral.sh/uv/">uv</a> (ou de Python 3.10+ com pip). Não precisa de cadastro: por padrão o servidor usa a chave pública que o próprio CNJ divulga na <a href="https://datajud-wiki.cnj.jus.br/api-publica/acesso/">wiki do DataJud</a>.</p>
+    <p class="sub">Precisa do <a href="https://docs.astral.sh/uv/">uv</a> (ou de Python 3.10+ com pip). Não precisa de cadastro: por padrão o servidor usa a chave pública vigente divulgada pelo CNJ na <a href="https://datajud-wiki.cnj.jus.br/api-publica/acesso/">wiki do DataJud</a>. O CNJ pode trocar essa chave a qualquer momento; se isso acontecer, informe a nova em <code>DATAJUD_API_KEY</code>.</p>
 
     <div class="steps">
       <div class="step">
@@ -230,8 +230,8 @@ mcp-juridico-brasil</code></pre><button class="copy" type="button">Copiar</butto
         <summary>Variáveis de ambiente (opcionais)</summary>
         <p>Defina no bloco <code>"env"</code> da configuração do cliente.</p>
         <dl class="env">
-          <dt>DATAJUD_API_KEY</dt><dd>Sua própria chave do DataJud. Sem ela, usa a chave pública do CNJ.</dd>
-          <dt>JURIDICO_SNAPSHOT_DIR</dt><dd>Pasta para salvar snapshots em disco. Sem ela, ficam só em memória.</dd>
+          <dt>DATAJUD_API_KEY</dt><dd>Substitui a chave padrão quando necessário, por exemplo se o CNJ divulgar uma chave pública nova. Sem ela, o servidor usa a chave pública vigente que acompanha esta versão.</dd>
+          <dt>JURIDICO_SNAPSHOT_DIR</dt><dd>Pasta para persistir em disco snapshots gravados. Nesta versão as tools de consulta não gravam snapshot, então não há efeito prático no uso comum.</dd>
           <dt>DJE_CLIENT_ID, DJE_CLIENT_SECRET, DJE_BEHALF_OF_CPF</dt><dd>Credenciais do Domicílio Judicial Eletrônico, só para as tools de intimação.</dd>
         </dl>
       </details>
@@ -245,17 +245,21 @@ mcp-juridico-brasil</code></pre><button class="copy" type="button">Copiar</butto
         <summary>O que o DataJud cobre?</summary>
         <p>O DataJud é a base nacional de dados processuais mantida pelo CNJ. A API pública traz metadados do processo (número, classe, assuntos, órgão julgador, datas) e a lista de movimentações com códigos das Tabelas Processuais Unificadas. Os dados vêm do que cada tribunal envia ao CNJ.</p>
       </details>
+      <details>
+        <summary>Quais tribunais estão cobertos?</summary>
+        <p>O servidor aceita 92 siglas de tribunais, que é o cadastro interno usado para montar a consulta. Estar cadastrado não garante que haja dados para aquele tribunal: segundo o <a href="https://www.cnj.jus.br/sistemas/datajud/sobre/">CNJ</a>, a base do DataJud abrange os tribunais dos incisos II a VII do art. 92 da Constituição, e o volume de dados de cada um depende do que ele envia. A lista inclui, por exemplo, o STF, que não está nesse recorte. Se uma consulta não retornar nada, confira no portal do tribunal.</p>
+      </details>
       <details open>
         <summary>O que o DataJud não cobre?</summary>
-        <p>Não traz a íntegra de peças, petições, documentos ou o texto de decisões. Processos em segredo de justiça não são retornados pela API pública. Os dados podem chegar com defasagem de alguns dias (em geral de 1 a 7) em relação ao portal do tribunal, então o portal continua sendo a fonte para decisões processuais.</p>
+        <p>Não traz a íntegra de peças, petições, documentos ou o texto de decisões. Processos em segredo de justiça não são retornados pela API pública. A atualização depende do envio e do processamento dos dados pelos tribunais, então pode haver atraso em relação ao portal do tribunal, que continua sendo a fonte para decisões processuais.</p>
       </details>
       <details>
         <summary>O cálculo de prazo é confiável?</summary>
-        <p>É uma estimativa técnica de apoio. Considera dias úteis, recesso forense (20/12 a 20/1) e feriados nacionais e estaduais. Feriados municipais, pontos facultativos e suspensões extraordinárias não entram automaticamente. Confira sempre antes de protocolar.</p>
+        <p>É uma estimativa técnica de apoio. Considera dias úteis, recesso forense (20/12 a 20/1) e feriados nacionais; feriados estaduais só entram quando você informa a UF. Se você não informar a data da intimação, o cálculo parte da data da última movimentação no DataJud, que pode estar desatualizada. Feriados municipais, pontos facultativos e suspensões extraordinárias não entram automaticamente. Confira sempre antes de protocolar.</p>
       </details>
       <details>
         <summary>Meus dados saem da minha máquina?</summary>
-        <p>O servidor roda localmente e consulta direto a API do CNJ, que só devolve dados públicos. Não há servidor intermediário do projeto. Snapshots ficam em memória e somem ao fechar, a menos que você configure <code>JURIDICO_SNAPSHOT_DIR</code>. Lembre que o texto da conversa vai para o provedor do assistente de IA que você usa.</p>
+        <p>O servidor roda localmente e consulta direto a API do CNJ, que só devolve dados públicos. Não há servidor intermediário do projeto, e nesta versão as tools de consulta não gravam os resultados em disco. Lembre que o texto da conversa vai para o provedor do assistente de IA que você usa.</p>
       </details>
       <details>
         <summary>O monitoramento me avisa sozinho?</summary>

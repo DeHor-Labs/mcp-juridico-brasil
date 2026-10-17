@@ -80,6 +80,9 @@ Examples = "https://github.com/DeHor-Labs/mcp-juridico-brasil/tree/main/examples
 [tool.hatch.build.targets.wheel]
 packages = ["src/mcp_juridico_brasil"]
 
+[tool.hatch.build.targets.sdist]
+exclude = ["landing"]
+
 [tool.ruff]
 target-version = "py310"
 line-length = 100

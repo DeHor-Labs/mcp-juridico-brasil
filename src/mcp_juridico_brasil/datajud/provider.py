@@ -71,7 +71,7 @@ class ProcessoProvider(ABC):
 class DataJudProvider(ProcessoProvider):
     """Provider concreto baseado na API publica DataJud (CNJ).
 
-    Cobertura: 91 tribunais. Zero custo. Sem webhook (polling).
+    Cobertura: 92 siglas de tribunais cadastradas. Zero custo. Sem webhook (polling).
     Defasagem: T+1 a T+7 dias dependendo do tribunal.
     """
 

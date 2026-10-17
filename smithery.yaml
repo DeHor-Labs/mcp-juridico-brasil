@@ -2,7 +2,7 @@
 # Deploy via Docker container com transporte HTTP streamable.
 #
 # MCP Juridico Brasil: acompanhamento de processos judiciais brasileiros.
-# Consulta DataJud CNJ (91 tribunais), movimentacoes, resumo de andamento,
+# Consulta DataJud CNJ (92 siglas de tribunais cadastradas), movimentacoes, resumo de andamento,
 # monitoramento e alertas de prazo. Zero scraping - somente APIs oficiais no MVP.
 
 build:

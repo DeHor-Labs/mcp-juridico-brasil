@@ -37,7 +37,7 @@ async def buscar_processo_por_numero(
     Consulta a API pública DataJud (CNJ) e retorna metadados do processo,
     classe, assuntos, órgão julgador, partes e histórico de movimentações.
 
-    Cobertura: 91 tribunais (STF, STJ, TST, TSE, STM, TRF1-6, TRTs, TJs
+    Cobertura: 92 siglas de tribunais cadastradas (STF, STJ, TST, TSE, STM, TRF1-6, TRTs, TJs
     estaduais, TREs e militares estaduais).
 
     Args:

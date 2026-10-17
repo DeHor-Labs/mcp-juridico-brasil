@@ -74,7 +74,7 @@ Exigem credenciais próprias do DJe (`DJE_CLIENT_ID`, `DJE_CLIENT_SECRET`, `DJE_
 | Ferramenta | Descrição | Fonte |
 |------------|-----------|-------|
 | `listar_intimacoes` | Lista comunicações recebidas no DJe. Somente leitura; conteúdo de intimações sigilosas é suprimido | DJe (API Comunica) |
-| `confirmar_leitura_intimacao` | Confirma leitura de intimação. **Tem efeito jurídico real e inicia prazo.** Opera em dry-run por padrão e só confirma com `confirmar=True` e `DJE_PERMITIR_CONFIRMACAO_LEITURA=true` | DJe (API Comunica) |
+| `confirmar_leitura_intimacao` | Confirma leitura de intimação. **Tem efeito jurídico real e inicia prazo.** Funciona em dry-run por padrão e só confirma com `confirmar=True` e `DJE_PERMITIR_CONFIRMACAO_LEITURA=true` | DJe (API Comunica) |
 
 ### Resource MCP
 
@@ -236,14 +236,15 @@ Claude / GPT / Cursor / qualquer cliente MCP
 - [x] **v0.1.x** - Busca de processo, listagem de movimentações, resumo de andamento e listagem de tribunais
 - [x] **v0.2.x** - Monitoramento por consulta, cálculo de prazos em dias úteis (CPC), resource MCP por processo
 - [ ] **v0.3.x** - Webhook push de atualizações, persistência em banco de dados e alertas por prazo
-- [ ] **v0.4.x** - Intimações via Domicílio Judicial Eletrônico (DJe), parsing de publicações e extração estruturada
+- [x] **v0.4.x (parcial)** - Intimações via Domicílio Judicial Eletrônico (DJe): listagem e confirmação de leitura com gate duplo
+- [ ] **v0.4.x** - Parsing de publicações e extração estruturada
 - [ ] **v1.0.0** - Suite processual completa com auditoria LGPD, contratos de API estáveis e cobertura ampliada
 
 ---
 
 ## Privacidade e LGPD
 
-> **Atenção:** o `mcp-juridico-brasil` acessa exclusivamente dados públicos disponibilizados pelo DataJud CNJ (Resolução CNJ 331/2020). Processos em **segredo de justiça** não são retornados pela API e não são acessados por este servidor. Nenhum dado processual é armazenado fora do ambiente local do usuário, e nesta versão as tools de consulta não gravam os resultados em disco. O uso das ferramentas é de responsabilidade do profissional habilitado, em conformidade com a LGPD (Lei 13.709/2018), a Resolução CNJ 647/2025 e a OAB Recomendação 001/2024. Estas ferramentas não constituem consultoria jurídica.
+> **Atenção:** as tools de consulta processual acessam exclusivamente dados públicos disponibilizados pelo DataJud CNJ (Resolução CNJ 331/2020); processos em **segredo de justiça** não são retornados por essa API. As tools opcionais do DJe são diferentes: com credenciais do próprio advogado, acessam comunicações processuais não públicas recebidas no Domicílio Judicial Eletrônico, com o conteúdo de intimações sigilosas suprimido, e `confirmar_leitura_intimacao` pode produzir efeito jurídico. Nenhum dado processual é armazenado fora do ambiente local do usuário, e nesta versão as tools de consulta não gravam os resultados em disco. O uso das ferramentas é de responsabilidade do profissional habilitado, em conformidade com a LGPD (Lei 13.709/2018), a Resolução CNJ 647/2025 e a OAB Recomendação 001/2024. Estas ferramentas não constituem consultoria jurídica.
 
 ---
 

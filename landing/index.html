@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP Jurídico Brasil: processos do DataJud CNJ no seu assistente de IA</title>
+<meta name="description" content="Servidor MCP gratuito e open source que consulta processos judiciais pela API pública DataJud do CNJ: andamentos, resumo, monitoramento e cálculo de prazos em dias úteis no Claude, Cursor e outros clientes MCP.">
+<link rel="canonical" href="https://juridico.dehor.dev/">
+<meta name="theme-color" content="#0b0c0e">
+<meta name="color-scheme" content="dark">
+<meta name="author" content="Nikolas de Hor">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="MCP Jurídico Brasil">
+<meta property="og:title" content="MCP Jurídico Brasil: processos do DataJud CNJ no seu assistente de IA">
+<meta property="og:description" content="Consulte processos, andamentos e prazos em dias úteis pela API pública DataJud do CNJ, direto no Claude, Cursor e outros clientes MCP. Gratuito e open source.">
+<meta property="og:url" content="https://juridico.dehor.dev/">
+<meta property="og:image" content="https://juridico.dehor.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="MCP Jurídico Brasil: processos do DataJud CNJ no seu assistente de IA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MCP Jurídico Brasil: processos do DataJud CNJ no seu assistente de IA">
+<meta name="twitter:description" content="Consulte processos, andamentos e prazos em dias úteis pela API pública DataJud do CNJ, direto no seu assistente de IA.">
+<meta name="twitter:image" content="https://juridico.dehor.dev/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "MCP Jurídico Brasil",
+  "alternateName": "mcp-juridico-brasil",
+  "description": "Servidor MCP que consulta e acompanha processos judiciais brasileiros pela API pública DataJud do CNJ, com cálculo de prazos em dias úteis.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "inLanguage": "pt-BR",
+  "softwareVersion": "0.1.0",
+  "license": "https://opensource.org/licenses/MIT",
+  "url": "https://juridico.dehor.dev/",
+  "image": "https://juridico.dehor.dev/og.png",
+  "downloadUrl": "https://pypi.org/project/mcp-juridico-brasil/",
+  "codeRepository": "https://github.com/DeHor-Labs/mcp-juridico-brasil",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
+  "author": { "@type": "Person", "name": "Nikolas de Hor", "url": "https://dehor.dev" }
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="nav">
+  <div class="col nav-in">
+    <a class="brand" href="/" aria-label="MCP Jurídico Brasil, início">
+      <img src="/favicon.svg" width="28" height="28" alt="">
+      <span>MCP Jurídico <span class="dim">Brasil</span></span>
+    </a>
+    <nav aria-label="Seções">
+      <a href="#exemplos">Exemplos</a>
+      <a href="#ferramentas">Ferramentas</a>
+      <a href="#instalacao">Instalação</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn-ghost btn-sm" href="https://github.com/DeHor-Labs/mcp-juridico-brasil">GitHub</a>
+  </div>
+</header>
+
+<main id="conteudo">
+  <section class="hero col">
+    <div class="hero-copy">
+      <h1>Seus processos do DataJud, <span class="accent">direto no assistente de IA.</span></h1>
+      <p class="lead">Pergunte em português sobre um processo e o seu assistente consulta a API pública do CNJ: classe, órgão julgador, andamentos, resumo para o cliente e prazos em dias úteis. Gratuito, open source e rodando na sua máquina.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#instalacao">Ver instalação <span aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="https://github.com/DeHor-Labs/mcp-juridico-brasil">Ver no GitHub</a>
+      </div>
+      <ul class="badges" aria-label="Indicadores do projeto">
+        <li><a href="https://pypi.org/project/mcp-juridico-brasil/"><img src="https://img.shields.io/pypi/v/mcp-juridico-brasil?label=PyPI&amp;color=0f665f&amp;labelColor=17191d" alt="Versão no PyPI" height="20"></a></li>
+        <li><a href="https://pypistats.org/packages/mcp-juridico-brasil"><img src="https://img.shields.io/pypi/dm/mcp-juridico-brasil?label=downloads&amp;color=0f665f&amp;labelColor=17191d" alt="Downloads mensais no PyPI" height="20"></a></li>
+        <li><a href="https://github.com/DeHor-Labs/mcp-juridico-brasil"><img src="https://img.shields.io/github/stars/DeHor-Labs/mcp-juridico-brasil?style=flat&amp;color=0f665f&amp;labelColor=17191d" alt="Estrelas no GitHub" height="20"></a></li>
+        <li><a href="https://github.com/DeHor-Labs/mcp-juridico-brasil/blob/main/LICENSE"><img src="https://img.shields.io/pypi/l/mcp-juridico-brasil?label=licen%C3%A7a&amp;color=0f665f&amp;labelColor=17191d" alt="Licença MIT" height="20"></a></li>
+      </ul>
+    </div>
+
+    <figure class="chat" aria-label="Exemplo ilustrativo de conversa com o assistente">
+      <div class="chat-bar"><span></span><span></span><span></span><em>exemplo ilustrativo</em></div>
+      <div class="msg user">Como está o processo <code>NNNNNNN-DD.AAAA.8.26.OOOO</code>? Teve andamento esta semana?</div>
+      <div class="call"><span class="dot"></span>buscar_processo_por_numero<span class="args">tribunal deduzido: TJSP</span></div>
+      <div class="call"><span class="dot"></span>monitorar_processo<span class="args">desde_iso: "2026-10-12"</span></div>
+      <div class="msg bot">O assistente responde com a classe, o órgão julgador e as últimas movimentações (data, nome e código TPU), diz se houve atualização desde 12/10 e avisa que o DataJud pode estar atrasado em relação ao portal do tribunal.</div>
+    </figure>
+  </section>
+
+  <section class="col stats" aria-label="Números do projeto, conferidos no código">
+    <div><strong>9</strong><span>tools MCP</span></div>
+    <div><strong>92</strong><span>siglas de tribunais cadastradas no servidor</span></div>
+    <div><strong>1</strong><span>resource MCP</span></div>
+    <div><strong>R$ 0</strong><span>licença MIT</span></div>
+  </section>
+
+  <section class="col section" id="publico">
+    <h2>Para quem é</h2>
+    <div class="grid4">
+      <article class="card"><h3>Advogados</h3><p>Pergunte sobre um processo como perguntaria a um estagiário e receba o andamento organizado, sem abrir portal por portal.</p></article>
+      <article class="card"><h3>Escritórios</h3><p>Acompanhe a carteira por número CNJ, gere resumos em linguagem simples para o cliente e estime prazos em dias úteis.</p></article>
+      <article class="card"><h3>Departamentos jurídicos</h3><p>Dê ao time interno uma consulta rápida ao contencioso da empresa usando a fonte oficial do CNJ, sem scraping.</p></article>
+      <article class="card"><h3>Devs legaltech</h3><p>Tools tipadas e prontas para agentes, em Python, via stdio. Plugue no seu produto em vez de reescrever cliente do DataJud.</p></article>
+    </div>
+  </section>
+
+  <section class="col section" id="exemplos">
+    <h2>O que você pergunta, o que ele faz</h2>
+    <p class="sub">Perguntas reais de rotina e a tool que o assistente chama para responder.</p>
+    <ol class="examples">
+      <li>
+        <p class="q">“Qual a situação do processo NNNNNNN-DD.AAAA.8.26.OOOO?”</p>
+        <p class="t"><code>buscar_processo_por_numero</code></p>
+        <p class="a">Classe, assuntos, órgão julgador, datas e movimentações. Se você não disser o tribunal, ele é deduzido do próprio número CNJ.</p>
+      </li>
+      <li>
+        <p class="q">“Me mostre os últimos 10 andamentos.”</p>
+        <p class="t"><code>listar_movimentacoes</code></p>
+        <p class="a">Histórico com nome do movimento, código TPU e data/hora, do mais recente para o mais antigo.</p>
+      </li>
+      <li>
+        <p class="q">“Resuma em linguagem simples para eu mandar ao cliente.”</p>
+        <p class="t"><code>resumir_andamento</code></p>
+        <p class="a">Entrega os dados do processo ao assistente com instruções de resumo, para ele escrever o texto em português claro.</p>
+      </li>
+      <li>
+        <p class="q">“Teve novidade desde 1º de outubro?”</p>
+        <p class="t"><code>monitorar_processo</code></p>
+        <p class="a">Diz se o processo teve atualização no DataJud depois da data informada e qual foi a data da última atualização.</p>
+      </li>
+      <li>
+        <p class="q">“Fui intimado hoje. Quando vence a contestação no TJSP?”</p>
+        <p class="t"><code>calcular_proximo_prazo</code></p>
+        <p class="a">Conta em dias úteis (arts. 219, 220 e 224 do CPC), com recesso forense e feriados nacionais. Feriados estaduais entram quando a UF é informada. É uma estimativa de apoio: confira sempre.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="col section" id="ferramentas">
+    <h2>Ferramentas</h2>
+    <p class="sub">As 9 tools e o resource registrados em <code>server.py</code>.</p>
+    <div class="tools">
+      <div class="tool-group">
+        <h3>Consulta e acompanhamento <small>DataJud CNJ</small></h3>
+        <dl>
+          <dt>buscar_processo_por_numero</dt><dd>Consulta completa pelo número CNJ (NNNNNNN-DD.AAAA.J.TR.OOOO).</dd>
+          <dt>listar_movimentacoes</dt><dd>Histórico de andamentos com código TPU e data/hora.</dd>
+          <dt>resumir_andamento</dt><dd>Dados do processo mais instrução de resumo para o modelo.</dd>
+          <dt>monitorar_processo</dt><dd>Verifica se houve atualização desde uma data.</dd>
+          <dt>listar_processos_monitorados</dt><dd>Lista os processos com snapshot gravado na sessão. Nesta versão, nenhuma tool de consulta grava snapshot, então a lista vem vazia.</dd>
+        </dl>
+      </div>
+      <div class="tool-group">
+        <h3>Prazos e referência</h3>
+        <dl>
+          <dt>calcular_proximo_prazo</dt><dd>Prazo em dias úteis com calendário forense. Roda offline quando você informa a data da intimação; sem ela, consulta o DataJud para usar a data da última movimentação. Feriados estaduais só entram com a UF informada.</dd>
+          <dt>listar_tribunais</dt><dd>As 92 siglas cadastradas no servidor e aceitas no parâmetro <code>tribunal</code>. Estar na lista não garante que o DataJud tenha dados daquele tribunal. Offline.</dd>
+        </dl>
+        <h3>Domicílio Judicial Eletrônico <small>opcional</small></h3>
+        <dl>
+          <dt>listar_intimacoes</dt><dd>Comunicações recebidas no DJe. Somente leitura. Exige credenciais próprias do DJe.</dd>
+          <dt>confirmar_leitura_intimacao</dt><dd>Tem efeito jurídico real e inicia prazo. Roda em modo de simulação por padrão e só confirma com dupla autorização explícita.</dd>
+        </dl>
+        <h3>Resource MCP</h3>
+        <dl>
+          <dt>processo://{numero}/snapshot</dt><dd>Lê o snapshot gravado de um processo, se existir. Como <code>buscar_processo_por_numero</code> e <code>monitorar_processo</code> não gravam snapshot, nesta versão ele responde que não há snapshot disponível.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="col section" id="instalacao">
+    <h2>Instalação</h2>
+    <p class="sub">Precisa do <a href="https://docs.astral.sh/uv/">uv</a> (ou de Python 3.10+ com pip). Não precisa de cadastro: por padrão o servidor usa a chave pública vigente divulgada pelo CNJ na <a href="https://datajud-wiki.cnj.jus.br/api-publica/acesso/">wiki do DataJud</a>. O CNJ pode trocar essa chave a qualquer momento; se isso acontecer, informe a nova em <code>DATAJUD_API_KEY</code>.</p>
+
+    <div class="steps">
+      <div class="step">
+        <h3>Comando do servidor MCP</h3>
+        <p class="note">É este comando que o cliente MCP executa. Rodado sozinho no terminal, ele só fica aguardando um cliente; para testar uma consulta, configure-o em um dos clientes abaixo.</p>
+        <div class="code"><pre><code>uvx mcp-juridico-brasil</code></pre><button class="copy" type="button">Copiar</button></div>
+        <p class="note">Sem <code>uv</code>? Instale com <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code> ou use <code>pip install mcp-juridico-brasil</code>.</p>
+      </div>
+
+      <details class="client" open>
+        <summary>Claude Desktop</summary>
+        <p>Edite <code>~/Library/Application Support/Claude/claude_desktop_config.json</code> (macOS) ou <code>%APPDATA%\Claude\claude_desktop_config.json</code> (Windows) e reinicie o app.</p>
+        <div class="code"><pre><code>{
+  "mcpServers": {
+    "juridico-brasil": {
+      "command": "uvx",
+      "args": ["mcp-juridico-brasil"]
+    }
+  }
+}</code></pre><button class="copy" type="button">Copiar</button></div>
+      </details>
+
+      <details class="client">
+        <summary>Cursor</summary>
+        <p>Crie ou edite <code>.cursor/mcp.json</code> no projeto (ou <code>~/.cursor/mcp.json</code> para todos os projetos).</p>
+        <div class="code"><pre><code>{
+  "mcpServers": {
+    "juridico-brasil": {
+      "command": "uvx",
+      "args": ["mcp-juridico-brasil"]
+    }
+  }
+}</code></pre><button class="copy" type="button">Copiar</button></div>
+      </details>
+
+      <details class="client">
+        <summary>Claude Code</summary>
+        <div class="code"><pre><code>claude mcp add juridico-brasil -- uvx mcp-juridico-brasil</code></pre><button class="copy" type="button">Copiar</button></div>
+      </details>
+
+      <details class="client">
+        <summary>Outros clientes MCP</summary>
+        <p>Qualquer cliente compatível com MCP via stdio funciona. Configure o comando <code>uvx</code> com o argumento <code>mcp-juridico-brasil</code>. Se instalou com pip, o comando é direto:</p>
+        <div class="code"><pre><code>pip install mcp-juridico-brasil
+mcp-juridico-brasil</code></pre><button class="copy" type="button">Copiar</button></div>
+      </details>
+
+      <details class="client">
+        <summary>Variáveis de ambiente (opcionais)</summary>
+        <p>Defina no bloco <code>"env"</code> da configuração do cliente.</p>
+        <dl class="env">
+          <dt>DATAJUD_API_KEY</dt><dd>Substitui a chave padrão quando necessário, por exemplo se o CNJ divulgar uma chave pública nova. Sem ela, o servidor usa a chave pública vigente que acompanha esta versão.</dd>
+          <dt>JURIDICO_SNAPSHOT_DIR</dt><dd>Pasta para persistir em disco snapshots gravados. Nesta versão as tools de consulta não gravam snapshot, então não há efeito prático no uso comum.</dd>
+          <dt>DJE_CLIENT_ID, DJE_CLIENT_SECRET, DJE_BEHALF_OF_CPF</dt><dd>Credenciais do Domicílio Judicial Eletrônico, só para as tools de intimação.</dd>
+        </dl>
+      </details>
+    </div>
+  </section>
+
+  <section class="col section" id="faq">
+    <h2>Perguntas frequentes</h2>
+    <div class="faq">
+      <details open>
+        <summary>O que o DataJud cobre?</summary>
+        <p>O DataJud é a base nacional de dados processuais mantida pelo CNJ. A API pública traz metadados do processo (número, classe, assuntos, órgão julgador, datas) e a lista de movimentações com códigos das Tabelas Processuais Unificadas. Os dados vêm do que cada tribunal envia ao CNJ.</p>
+      </details>
+      <details>
+        <summary>Quais tribunais estão cobertos?</summary>
+        <p>O servidor aceita 92 siglas de tribunais, que é o cadastro interno usado para montar a consulta. Estar cadastrado não garante que haja dados para aquele tribunal: segundo o <a href="https://www.cnj.jus.br/sistemas/datajud/sobre/">CNJ</a>, a base do DataJud abrange os tribunais dos incisos II a VII do art. 92 da Constituição, e o volume de dados de cada um depende do que ele envia. A lista inclui, por exemplo, o STF, que não está nesse recorte. Se uma consulta não retornar nada, confira no portal do tribunal.</p>
+      </details>
+      <details open>
+        <summary>O que o DataJud não cobre?</summary>
+        <p>Não traz a íntegra de peças, petições, documentos ou o texto de decisões. Processos em segredo de justiça não são retornados pela API pública. A atualização depende do envio e do processamento dos dados pelos tribunais, então pode haver atraso em relação ao portal do tribunal, que continua sendo a fonte para decisões processuais.</p>
+      </details>
+      <details>
+        <summary>O cálculo de prazo é confiável?</summary>
+        <p>É uma estimativa técnica de apoio. Considera dias úteis, recesso forense (20/12 a 20/1) e feriados nacionais; feriados estaduais só entram quando você informa a UF. Se você não informar a data da intimação, o cálculo parte da data da última movimentação no DataJud, que pode estar desatualizada. Feriados municipais, pontos facultativos e suspensões extraordinárias não entram automaticamente. Confira sempre antes de protocolar.</p>
+      </details>
+      <details>
+        <summary>Meus dados saem da minha máquina?</summary>
+        <p>O servidor roda localmente e consulta direto a API do CNJ, que só devolve dados públicos. Não há servidor intermediário do projeto, e nesta versão as tools de consulta não gravam os resultados em disco. Lembre que o texto da conversa vai para o provedor do assistente de IA que você usa.</p>
+      </details>
+      <details>
+        <summary>O monitoramento me avisa sozinho?</summary>
+        <p>Não. O monitoramento é por consulta: o assistente verifica o que mudou quando você pede. Notificações automáticas estão no roadmap, não nesta versão.</p>
+      </details>
+      <details>
+        <summary>Quanto custa?</summary>
+        <p>Nada. O projeto é open source sob licença MIT e a API pública do DataJud é gratuita. O custo que existe é o do assistente de IA que você já usa.</p>
+      </details>
+      <details>
+        <summary>Funciona com quais assistentes?</summary>
+        <p>Com qualquer cliente que suporte o Model Context Protocol via stdio, como Claude Desktop, Claude Code e Cursor.</p>
+      </details>
+      <details>
+        <summary>Isso substitui o advogado?</summary>
+        <p>Não. As ferramentas organizam informação pública e não constituem consultoria jurídica. A análise e as decisões são do profissional habilitado.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="col cta">
+    <h2>Quer isso integrado ao sistema do seu escritório?</h2>
+    <p>Integrações sob medida, agentes e automações jurídicas com Nikolas de Hor.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="https://dehor.dev">Falar com Nikolas <span aria-hidden="true">→</span></a>
+      <a class="btn btn-ghost" href="https://github.com/DeHor-Labs/mcp-juridico-brasil#readme">Ler a documentação</a>
+    </div>
+  </section>
+</main>
+
+<footer class="col foot">
+  <p>MCP Jurídico Brasil, licença MIT. Feito por <a href="https://dehor.dev">Nikolas de Hor</a>.</p>
+  <p><a href="https://github.com/DeHor-Labs/mcp-juridico-brasil">GitHub</a> · <a href="https://pypi.org/project/mcp-juridico-brasil/">PyPI</a> · <a href="https://github.com/DeHor-Labs/mcp-fiscal-brasil">Projeto irmão: MCP Fiscal Brasil</a></p>
+  <p class="dim">Não é um serviço oficial do CNJ. Dados públicos da API DataJud.</p>
+</footer>
+
+<script src="/copy.js" defer></script>
+</body>
+</html>
